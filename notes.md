@@ -180,7 +180,7 @@ name; // ""
 2. Let solves the problem with for loops
 - Setting the stage:
 ```js
-for (var = i; i < 10; i ++) {
+for (var i = 0; i < 10; i ++) {
     console.log(i);
 }
 // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
@@ -194,12 +194,15 @@ for (var i = 0; i < 10; i++) {
         console.log("The number is" + i);
     }, 1000);
 }
-// You get "The number is 10" ten times
+// The number is 10
+// The number is 10
+// The number is 10
+// And so on..repeated until ten times
 ```
 - Notice that it runs the for loop to get the results and then runs the console.log() (ie 0, 1, 2, etc.)
-- After the console.log() has run, i is now 10, then setTimeout() is ran (ie i = 10)
-- So at this point you're just console.log() i as 10 (ie The number is 10, Then number is 10, etc.)
-- So if you want to display "The number is i" with i incrementing in value, use the let 
+- After the console.log() has run, i is now 10, then setTimeout() is ran
+- So at this point you're just console.log() i as 10 
+- So if you want to display "The number is i" with i incrementing in value, use let 
 ```js
 for (let i = 0; i < 10; i++) {
     setTimeout(function() {
@@ -212,6 +215,7 @@ for (let i = 0; i < 10; i++) {
 // The number is 2
 // And so on...until 9
 ```
+
 ## Temporal Dead Zone
 - Variables have to be declared before they are called:
 ```js
@@ -251,3 +255,482 @@ const pizza = "Deep Dish";
 1. Use `var` for top-level variables that are shared across many (especially larger) scopes
 2. Use `let` for localized variables in smaller scopes
 3. Refactor `let` to `const` only after some code has been written and you're reasonably sure that you've got a case where there shouldn't be variable reassignment
+
+# Module #2 Function Improvements: Arrows and Default Arguments
+## Arrow Functions Introduction
+- Arrow functions were introduced in ES6
+- Some features they provided:
+1. More concise than regular functions
+2. They have implicit returns
+3. They don't rebind "this" when used inside of another function
+  
+- So to set the stage:
+```js
+const names = ["wes", "kait", "lux"];
+
+const fullNames = names.map(function(name) {
+    return `${name} bos`;
+});
+
+console.log(fullNames); // ["wes bos", "kait bos", "lux bos"]
+```
+  
+- Now to change it to arrow functions:
+```js
+// Original
+const fullNames = names.map(function(name) {
+    return `${name} bos`;
+});
+
+// 1st pass: Remove function and add fat arrow
+const fullNames2 = names.map((name) => {
+    return `${name} bos`;
+})
+
+// 2nd pass: Remove the parenthesis on the parameter
+// You can choose to use them with one argument which is okay too
+// If you have multiple arguments, you should use the parenthesis
+const fullNames3 = names.map(name => {
+    return `${name} bos`;
+})
+
+// 3rd pass: Create an implicit return
+// Remove the return and brackets
+const fullNames4 = names.map(name => `${name} bos`);
+
+// 4th pass: Remove argument if there are none
+// Still need empty parenthesis
+const fullNames5 = names.map(() => `cool bos`);
+```
+### Arrow functions are anonymous functions
+- Unlike a named function, you can't give the function a name:
+```js
+function sayMyName(name) {
+    alert(`Hello ${name}`);
+}
+```
+- However, you can put it in a variable:
+```js
+const sayMyName = (name) => { alert(`Hello ${name}!`) }
+
+sayMyName("Wes"); // "Hello Wes!"
+```
+
+## More Arrow Function Examples
+### Racing example
+- Setting the stage:
+```js
+const race = "100m Dash";
+const winners = ["Hunter Gath", "Singa Song", "Imda Bos"];
+
+// Ideally, information is easier to handle in an object
+{
+    name: "Wes Bos",
+    place: 1,
+    race: race
+}
+```
+  
+- So now we want to loop over the winners array and return an object
+- Notice that we used 2 parameters, must have parenthesis
+- If we want to return an object implicitly, must have parenthesis around that object
+- Otherwise, it is treated as brackets of a function
+- We also have to add +1 on to i because it's based off 1st, 2nd, 3rd place and not 0
+- Also, use console.table(), it's great
+```js
+const race = "100m Dash";
+const winners = ["Hunter Gath", "Singa Song", "Imda Bos"];
+
+const win = winners.map( (winner, i) => ({name: winner, race: race, place: i + 1}) );
+
+win; // Returns 3 objects
+console.table(win); // Better way to return objects in a table
+```
+- Another new feature in ES6:
+```js
+({name: winner, race, place: i + 1}) // You can also refactor "race: race" to "race"
+```
+
+### Age Example
+- We want to filter people older than 60 years old
+- Normally we use an "if" statement, but we can use .filter() instead
+- It looks strange with => and >= in the same line:
+```js
+const ages = [23,62,45,234,2,62,234,62,34];
+
+const old = ages.filter(age => age >= 60);
+console.log(old); // [62,234,62,234,62]
+```
+
+## Arrow Functions and `this`
+- When using arrow functions, the "this" keyword does not get rebound
+- In this example, Wes has a transition on a box that grows in size with text sliding in
+- Setting the stage:
+```js
+const box = document.querySelector('.box');
+box.addEventListener('click', function() {
+    console.log(this);
+    })
+
+// "this" refers to box which refers to .box, so it works
+```
+- If we change to an arrow function:
+```js
+const box = document.querySelector('.box');
+box.addEventListener('click', () => {
+    console.log(this);
+    })
+
+// "this" will refer to the window object
+// Because using arrow functions refers to the parent scope, this case, the window object
+// The arrow function is not inside of the another block so it takes on the parent object
+```
+- So now changing it back to function(), we want to toggle the box to open up:
+```js
+const box = document.querySelector('.box');
+box.addEventListener('click', function() => {
+    this.classList.toggle('opening');
+    })
+```
+- Also add the text to slide in after half a second:
+```js
+const box = document.querySelector('.box');
+box.addEventListener('click', function() => {
+    this.classList.toggle('opening');
+    setTimeout(function() {
+        console.log(this);
+        this.classList.toggle('open');
+        }, 500);
+    });
+
+// However, we get an error inside the setTimeout()
+// "this" refers to the window object again?
+// Since we started a new function, it is not bound to anything
+// "this" refers to the parent scope defined outside for that reason
+```
+- We change the setTimeOut function to an arrow function to fix this:
+```js
+const box = document.querySelector('.box');
+box.addEventListener('click', function() => { // "this" from following line refers to box
+    this.classList.toggle('opening'); // setTimeout's "this" refers here
+    setTimeout(() => {
+        console.log(this); // "this" refers to the this next to .classList
+        this.classList.toggle('open');
+        }, 500);
+    });
+
+// Arrow functions do not change the value of "this"
+// It inherits the value of "this" from the parent function
+// Reason is because it is inside of another function
+// We do not have to worry about the scope changing
+// It will now take on the value of "this" in this.classList, which in turn refers to the box 
+```
+
+### Solving the reverse animation
+- You can add change your code:
+- We will look further in the destructuring part of the course
+- You can use ES6 syntax to switch the variables
+```js
+const box = document.querySelector('.box');
+box.addEventListener('click', function() => {
+    let first = 'opening';
+    let second = 'open';
+
+    if(this.classList.contains(first)) {
+        [first, second] = [second, first] // New ES6 syntax
+    }
+    this.classList.toggle(first);
+    setTimeout(function() => {
+        console.log(this);
+        this.classList.toggle(second);
+        }, 500);
+    });
+
+// The logic here is that if the box already has the class opening,
+// It switches the variables and does the reverse process
+```
+
+## Default Function Arguments
+- Default Function Arguments make your code much more readable and maintainable
+- Setting the state for a calculate bill example:
+```js
+function calculateBill(total, tax, tip) {
+    return total + (total * tax) + (total * tip);
+}
+
+const totalBill = calculateBill(100, 0.13, 0.15);
+console.log(totalBill); // 128
+
+const totalBill = calculateBill(100);
+console.log(totalBill); // NaN
+// So what do we do if we don't know the tax and tip rate and just assume?
+// Those values for tax and tip will be undefined if you leave them blank
+```
+- Normally, what we would do is 1 of 2 ways:
+- The problem is the code is cumbersome
+```js
+// Method 1
+function calculateBill(total, tax, tip) {
+    if (tax === undefined) {
+        tax = 0.13;
+    }
+    if (tip === undefined) {
+        tip = 0.15;
+    }
+    return total + (total * tax) + (total * tip);
+}
+
+// Method 2
+function calculateBill(total, tax, tip) {
+    tax = tax || 0.13;
+    tip = tip || 0.15;
+
+    return total + (total * tax) + (total * tip);
+}
+```
+
+### Setting default function arguments
+- Instead now in ES6, we can just set the values in the parameters:
+- So if nothing is passed in for those parameters, those default values will pass in
+```js
+function calculateBill (total, tax = 0.13, tip = 0.15) {
+    return total + (total * tax) + (total * tip);
+}
+```
+- Can we leave one of the arguments emtpy?
+- No, you have to set it as undefined
+```js
+function calculateBill (total, tax = 0.13, tip = 0.15) {
+    return total + (total * tax) + (total * tip);
+}
+
+const totalBill = calculateBill(100, , 0.25);
+console.log(totalBill); // Error;
+```
+- Instead, just explicitly pass undefined:
+```js
+function calculateBill (total, tax = 0.13, tip = 0.15) {
+    return total + (total * tax) + (total * tip);
+}
+
+const totalBill = calculateBill(100, undefined, 0.25);
+console.log(totalBill); // 138;
+```
+
+## When NOT to use an Arrow Function
+- These are 4 situations when you don't want to use the arrow function
+### 1. When you really need `this`:
+- This function turns a button yellow on and off
+```js
+// The wrong way
+const button = document.querySelector('#pushy');
+button.addEventListener('click', () => {
+    this.classList.toggle('on');
+});
+
+// "this" was bound to the window object because it was not inside of a function
+// If you console.log(this), you will find that it's the window
+
+// The right way
+const button = document.querySelector('#pushy');
+button.addEventListener('click', function() {
+    this.classList.toggle('on');
+});
+```
+  
+### 2. When you need a method to bind to an object:
+```js
+// The wrong way
+const person = {
+    points: 23,
+    score: () => {
+        this.points++;
+    }
+}
+
+console.log(person.points); // 23
+console.log(person.score()); // Should be 24
+console.log(person.score()); // Should be 25
+console.log(person.score()); // Should be 26
+console.log(person.points); // Still 23
+
+// "this" keyword was not bound to the object so you need to use function()
+// If you console.log(this), you will find that it's the window
+
+// The right way
+const person = {
+    points: 23,
+    score: function() {
+        this.points++;
+    }
+}
+
+console.log(person.points); // 23
+console.log(person.score()); // Should be 24
+console.log(person.score()); // Should be 25
+console.log(person.score()); // Should be 26
+console.log(person.points); // 26
+
+// There's a refactor for a method on an object but we will visit this more later
+const person = {
+    points: 23,
+    score() {
+        this.points++;
+    }
+}
+```
+
+### 3. When you need to add a prototype method
+- We have not learned about class yet
+- We have a prototype to summarize the type of car and color
+```js
+// The wrong way
+class Car {
+    constructor (make, colour) {
+        this.make = make;
+        this.colour = colour;
+    }
+}
+
+const beemer = new Car("bmw", "blue");
+const subie = new Car("Subaru", "white");
+
+Car.prototype.summarize = () => {
+    return `this care is a ${this.make} in the colour ${this.colour}`;
+}
+
+subie; // Car {make: "Subaru", colour: "white"}
+beemer; // Car {make: "bmw", colour, "blue"}
+subie.summarize(); // "This car is undefined in the colour undefined"
+
+// This was not bound to the Car constructor so we need to use function() here
+
+// The right way
+class Car {
+    constructor (make, colour) {
+        this.make = make;
+        this.colour = colour;
+    }
+}
+
+const beemer = new Car("bmw", "blue");
+const subie = new Car("Subaru", "white");
+
+Car.prototype.summarize = function() {
+    return `this care is a ${this.make} in the colour ${this.colour}`;
+}
+
+subie.summarize(); // "This car is Subaru in the colour white"
+bmw.summarize(); // "This car is bmw in the colour blue"
+```
+
+### 4. When you need arguments object
+- We are trying to return strings in an array with order of child number
+- We have an "arguments" keyword that returns keywords from function
+```js
+// The wrong way
+const orderChildren = () => {
+    const children = Array.from(arguments);
+    return children.map((child, i) => {
+        return `${child} was child #${i + 1}`;
+    })
+    console.log(arguments); // Error;
+}
+
+// You do not get arguments if you use an arrow function
+
+// The right way
+const orderChildren = function() => {
+    const children = Array.from(arguments);
+    return children.map((child, i) => {
+        return `${child} was child #${i + 1}`;
+    })
+
+    console.log(arguments); // Works
+}
+```
+
+## Arrow Functions Exercises
+- There are 2 exercises
+
+### Exercise 1
+- Note that we are just returning seconds at the end
+- Don't worry about converting it back to time in hours and minutes
+- Code:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrow Functions</title>
+</head>
+<body>
+
+<ul>
+  <li data-time="5:17">Flexbox Video</li>
+  <li data-time="8:22">Flexbox Video</li>
+  <li data-time="3:34">Redux Video</li>
+  <li data-time="5:23">Flexbox Video</li>
+  <li data-time="7:12">Flexbox Video</li>
+  <li data-time="7:24">Redux Video</li>
+  <li data-time="6:46">Flexbox Video</li>
+  <li data-time="4:45">Flexbox Video</li>
+  <li data-time="4:40">Flexbox Video</li>
+  <li data-time="7:58">Redux Video</li>
+  <li data-time="11:51">Flexbox Video</li>
+  <li data-time="9:13">Flexbox Video</li>
+  <li data-time="5:50">Flexbox Video</li>
+  <li data-time="5:52">Redux Video</li>
+  <li data-time="5:49">Flexbox Video</li>
+  <li data-time="8:57">Flexbox Video</li>
+  <li data-time="11:29">Flexbox Video</li>
+  <li data-time="3:07">Flexbox Video</li>
+  <li data-time="5:59">Redux Video</li>
+  <li data-time="3:31">Flexbox Video</li>
+</ul>
+
+<script>
+
+  // Select all the list items on the page and convert to array
+  const items = Array.from(document.querySelectorAll('[data-time]'))
+
+  // Filter for only the elements that contain the word 'flexbox'
+  const filtered = items
+    .filter(item => item.innerHTML.includes("Flexbox"))
+
+    // map down to a list of time strings
+    .map(item => item.dataset.time)
+
+    // map to an array of seconds
+    .map(item => {
+      const parts = item.split(":").map(part => parseFloat(part));
+      return (parts[0] * 60) + parts[1];
+    })  
+    // reduce to get total
+    .reduce( (totalTime, seconds) => (totalTime + seconds), 0);
+
+    // 🔥 This can also be done in a single .reduce(), but we're practicing arrow functions here, so chain them!
+</script>
+</body>
+</html>
+```
+
+### Exercise 2
+- Code:
+```js
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrow Functions</title>
+</head>
+<body>
+
+<script>
+    // 1. Given this array: `[3,62,234,7,23,74,23,76,92]`, use the array filter method and an arrow function to create an array of the numbers greater than `70`
+    const numbers = [3, 62, 234, 7, 23, 74, 23, 76, 92];
+    numbers.filter(age => age > 70);
+</script>
+</body>
+</html>
+```
