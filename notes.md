@@ -1062,3 +1062,61 @@ const html = `
 const bio = document.querySelector('.bio');
 bio.innerHTML = html;
 ```
+# Module #4 Additional String Improvements
+## New String Methods
+- Strings in ES6 comes with 4 new methods: `.startsWith()`, `.endsWith()`, `.includes()`, `.repeat()`
+- Helps us decrease reliance on regex
+- These methods are case-sensitive, there is not way to make it non-case sensitive (would need to use regex)
+- Setting the stage:
+```js
+const course = 'RFB2';
+const flightNumber = '20-AC2018-jz';
+const accountNumber = '825242631RT0001';
+
+const make = 'BMW';
+const model = 'x5';
+cons colour = 'Royal Blue';
+```
+
+### .startsWith()
+- Results:
+```js
+course.startsWith('RFB'); // true
+course.startsWith('rfb'); // false
+
+// Can also start checking at a certain point
+flightNumber.startsWith('AC'); // false
+flightNumber.startsWith('AC', 3); // true, start checking after the 3rd character
+```
+
+### .endsWith()
+- Results:
+```js
+flightNumber.endsWith('jz'); // true
+
+accountNumber.endsWith('RT'); // false
+accountNumber.endsWith('RT', 11); // true, take only the 1st eleven numbers into account
+```
+### .includes()
+- Results:
+```js
+flightNumber.includes('AC'); // true
+flightNumber.includes('ac'); // false
+```
+
+### .repeat()
+- Allows you to repeat the strings how ever many times you want
+- Results:
+```js
+// We are making a left-pad function
+function leftPad(str, length = 20) {
+    return `-> ${` `.repeate(length - str.length)}`;
+}
+
+console.log(leftPad(make));
+console.log(leftPad(model));
+console.log(leftPad(colour));
+
+// Batman repeat string
+`${'a' * 5}`.repeat(10) + ' Batman!';
+```
