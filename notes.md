@@ -734,3 +734,331 @@ const orderChildren = function() => {
 </body>
 </html>
 ```
+
+# Module #3 Template Strings
+## Template Strings Introduction
+- In other languages we can stick variables right into the string
+- Now in JS, it's possible with template strings (aka template literals)s
+- Here we convert a string with variables under one tag
+- Backticks are new in ES6 and initiates template strings
+```js
+const name = "Snickers";
+const age = 2;
+const sentence = `My dog ${name} is ${age * 7} years old.`;
+
+console.log(sentence); // "My dog Snickers is 14 years old."
+```
+
+## Creating HTML fragments with Template Literals
+### 1. Writing multiple lines of codes easily
+- We can now type all our text without using multiple lines
+- In the past:
+```js
+const person = {
+    name: "Wes",
+    job: "Web Developer",
+    city: "Hamilton",
+    bio: "Wes is a really cool guy that loves to teach web development!",
+};
+
+var text = "hello there, \
+    how are you \
+";
+```
+- Now we can use multi-line strings:
+- It will take care of the return's and spacing
+```js
+const markup = `
+    <div class="person">
+        <h2>
+            ${person.name}
+            <span class="job">${person.job}</span>
+        </h2>
+        <p class="location">${person.city}</p>
+        <p class="bio">${person.bio}</p>
+    </div>
+`
+
+document.body.innerHTML = markup;
+```
+### 2. Nesting strings inside of each other
+- You can write string literals and use map functions inside of another string literal
+- We use .join('') to remove the commas between the items in an array
+```js
+const dogs = [
+    { name: "Snickers", age: 2 },
+    { name: "Hugo", age: 8},
+    { name: "Sunny", age: 1}
+]
+
+const markup = `
+    <ul class="dogs">
+        ${dogs.map(dog => `<li>${dog.name} is ${dog.age * 7}</li>`).join("")}
+    </ul>    
+`;
+
+document.body.innerHTML = markup;
+```
+
+### Using if statements inside a string template using ternary operator
+- This is taken from react.render() 
+- We are writing a song name and artist
+- If there is a featuring, we want to add that using a ternary operator
+```js
+const song = {
+    name: "Dying to live",
+    artist: "Tupac",
+    featuring: "Biggie Smalls"
+};
+
+const markup = `
+    <div class="song">
+        <p>
+            ${song.name} - ${song.artist}
+            ${song.featuring ? `(Featuring ${song.featuring})` : ""}
+        </p>
+    </div>
+`;
+```
+
+### Create a render function from react
+- Make separate components to handle the complex information
+- Here we are making a separate function to render all the keywords:
+```js
+const beer = {
+    name: "Belgian Wit",
+    brewery: "Steam Whistle Brewery",
+    keywords: ["pale", "cloudy", "spiced", "crisp"]
+};
+
+// Our render function
+function renderKeywords(keywords) {
+    return `
+        <ul>
+            ${keywords.map(keyword => `<li>${keyword}</li>`).join("")}
+        </ul>
+    `;
+}
+
+// Our markup
+const markup = `
+    <div class="beer">
+        <h2>${beer.name}</h2>
+        <p class="brewery">${beer.brewery}</p>
+        ${renderKeywords(beer.keywords)}
+    </div>
+`;
+```
+## Tagged Template Literals
+- We can tag the strings
+- We can used templates to craft our own strings
+```js
+const name = 'Snickers';
+const age = 100;
+const sentence = `My dogs's name is ${name} and he is ${age} years old`;
+
+console.log(sentence);
+```
+- We tag the string with a function so it runs on the string
+- Notice that we tagged the string with highlight word in front
+- So the const sentence will be the result after the highlight function has processed the defined string
+- It is basically a step in between
+- Notice that we used logical operators to counter any undefined values
+```js
+function highlight(strings, ...values) {
+    let str = '';
+    strings.forEach((string, i) => {
+        str += string + (values[i] || "");
+    })
+    return str;
+}
+const name = 'Snickers';
+const age = 100;
+const sentence = highlight`My dogs's name is ${name} and he is ${age} years old`;
+
+console.log(sentence);
+```
+- Moving on, what can we do with this new string?
+- We can highlight the values
+- We can make boxes editable
+```js
+<style>
+.hl {
+    background: #ffc600;
+}
+</style>
+
+function highlight(strings, ...values) {
+    let str = '';
+    strings.forEach((string, i) => {
+        str += string + (values[i] || "");
+        str += `${string} <span contenteditable class="hl">${values[i] || ""}</span>`;
+    })
+    return str;
+}
+const name = 'Snickers';
+const age = 100;
+const sentence = highlight`My dogs's name is ${name} and he is ${age} years old`;
+
+console.log(sentence);
+document.body.innerHTML = sentence;
+```
+
+### Sidenote #1 Rest Operator
+- For the parameters, sometimes we don't know arguments already so we use the rest operator (...values) 
+- The syntax: `function highlight(strings, names, age, etc.)` turns to `function highlight(strings, ...values)`
+
+### Sidenote #2 Debugger with tagged templates
+- After running the debugger:
+```js
+function highlight(strings, ...values) {
+    debugger;
+}
+
+// Strings (Array[3]): 0:"My dog's name is", 1:" and he is ", 2:" years old"
+// Values (Array[2]): 0:"Snickers", 1:100
+```
+- You will notice that the amount of strings is always 1 more than the values
+- Strings has 3 values and Values has only 2 values
+- It breaks ups the string to as many pieces as it can until a variable stops it
+
+## Tagged Template Exercise
+- When you're trying to add an abbreviation tag to a sentence
+- Notice we do not have variables for HTML, CSS, JS
+- But it will still render as a value which is useful later
+- We also append the sentence with JS
+- Setting the stage:
+```js
+<body>
+    <div class="bio"></div>
+</body>
+
+const dict = {
+    HTML: 'Hyper Text Markup Language',
+    CSS: 'Cascading Style Sheets',
+    JS: 'JavaScript'
+}
+
+const first = 'Wes';
+const last = 'Bos';
+const sentence = `Hello my name is ${first} ${last} and I love to code ${'HTML'}, ${'CSS'}, ${'JS'}`;
+
+const bio = document.querySelector('.bio');
+const p = document.createElement('p');
+p.innerHTML = sentence;
+bio.appendChild(p);
+```
+
+### Displaying abbreviations if it exists
+- Now we create a function to return a new string
+- The new string will show the abbreviations if exists
+```js
+<body>
+    <div class="bio"></div>
+</body>
+
+const dict = {
+    HTML: 'Hyper Text Markup Language',
+    CSS: 'Cascading Style Sheets',
+    JS: 'JavaScript'
+}
+
+function addAbbreviations(strings, ...values) {
+    const abbreviated = values.map(value => {
+        if(dict[value]) {
+            return `<abbr title="${dict[value]}">${value}</abbr>`
+        }
+        return value;
+    })
+}
+
+const first = 'Wes';
+const last = 'Bos';
+const sentence = `Hello my name is ${first} ${last} and I love to code ${'HTML'}, ${'CSS'}, ${'JS'}`;
+
+const bio = document.querySelector('.bio');
+const p = document.createElement('p');
+p.innerHTML = sentence;
+bio.appendChild(p);
+```
+### Stringing together the new sentence
+- We can choose to use `let str = ''` or .reduce()
+- 1. let str
+```js
+let str = '';
+```
+  
+- 2. .reduce()
+- Reduces takes 2 arguments (function, what you start with)
+```js
+<body>
+    <div class="bio"></div>
+</body>
+
+const dict = {
+    HTML: 'Hyper Text Markup Language',
+    CSS: 'Cascading Style Sheets',
+    JS: 'JavaScript'
+}
+
+function addAbbreviations(strings, ...values) {
+    const abbreviated = values.map(value => {
+        if(dict[value]) {
+            return `<abbr title="${dict[value]}">${value}</abbr>`
+        }
+        return value;
+    });
+
+    return string.reduce((sentence, string, i) => {
+        return `${sentence}${string}${abbreviated[i] || ''}`;
+    }, '')
+}
+
+const first = 'Wes';
+const last = 'Bos';
+const sentence = `Hello my name is ${first} ${last} and I love to code ${'HTML'}, ${'CSS'}, ${'JS'}`;
+
+const bio = document.querySelector('.bio');
+const p = document.createElement('p');
+p.innerHTML = sentence;
+bio.appendChild(p);
+```
+## Sanitizing User Data with Tagged Templates
+- With a security background, you need to sanitize the data
+- They might insert JS that might be harmful to your website
+- They might run some onload or JS to steal information, post as you
+- Setting the stage:
+```js
+const first = 'Wes';
+const aboutMe = `I love to do evil <img src="http://unsplash.it/100/100?random" onload="alert('you got hacked');" />`;
+
+const html = `
+    <h3>${first}</h3>
+    <p>${aboutMe}</p>
+`
+
+const bio = document.querySelector('.bio');
+bio.innerHTML = html;
+```
+  
+- Now we are using [DOMpurify](https://github.com/cure53/DOMPurify) to add a script `<script type="text/javascript" src="dist/purify.min.js"></script>`
+- The code to run it is `var clean = DOMPurify.sanitize(dirty);`
+- We are also making a sanitize function:
+```js
+<script type="text/javascript" src="dist/purify.min.js"></script>
+
+function sanitize(strings, ...values) {
+    const dirty = strings.reduce((prev, next, i) => `${prev}${next}${values[i] || ''}`, '');
+    return DOMpurify.sanitize(dirty);
+}
+const first = 'Wes';
+const aboutMe = sanitize`I love to do evil <img src="http://unsplash.it/100/100?random" onload="alert('you got hacked');" />`;
+
+const html = `
+    <h3>${first}</h3>
+    <p>${aboutMe}</p>
+`
+
+const bio = document.querySelector('.bio');
+bio.innerHTML = html;
+```
