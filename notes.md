@@ -1120,3 +1120,195 @@ console.log(leftPad(colour));
 // Batman repeat string
 `${'a' * 5}`.repeat(10) + ' Batman!';
 ```
+
+# Module #5 Destructuring
+## Destructuring Objects
+- Destructuring allows us to extract data from objects, arrays, maps, and sets into their own variables
+- Many time we just extract properties from the top level element
+```js
+const person = {
+    first: 'Wes',
+    last: 'Bos',
+    country: 'Canada',
+    city: 'Hamilton',
+    twitter: '@wesbos'
+};
+
+const first = person.first;
+const last = person.last;
+
+// But now we can destructuring
+const { first, last, twitter } = person;
+```
+
+### Deeper nested data
+- With deeper data that we get from an API for example
+```js
+const wes = {
+    first: 'Wes',
+    last: 'Bos',
+    links: {
+        social: {
+            twitter: 'https://twitter.com/wesbos',
+            facebook: 'https://facebook.com/wesbos.developer',
+        },
+        web: {
+            blog: 'https://wesbos.com'
+        }
+    }
+}
+
+const twitter = wes.links.social.twitter;
+const facebook = wes.links.social.facebook;
+
+// With destructuring:
+// We are also renaming the variable as we are destructuring using :
+const { twitter:tweet, facebook:fb } = wes.links.social;
+```
+
+### Setting defaults
+- Pretend we are making a function that we are making animations
+- The function also sets some settings
+- We have width and color but it also needs height and fontSize
+```js
+var settings = {width: 300, color: 'Black'}
+
+// Require height and fontSize
+// We destructure all four variables
+const { width, height, color, fontSize} = settings;
+```
+- So when we destructure we can set a fallback also
+```js
+const { width = 100, height = 100, color = 'blue', fontSize = 25 } = settings;
+
+width; // 300
+height; // 100
+color; // "black"
+fontSize; // 25
+```
+
+### Final example
+- This is a combination of all the destructuring:
+```js
+const { w: width = 400, h: height = 500 } = {w: 800}
+
+// In this case
+// Width will be 800 and height will be 500
+// Notice the renaming of w to width and w to height also
+```
+## Destructuring Arrays
+- Also works with arrays but we use brackets instead
+```js
+const details = ['Wes Bos', 123, 'wesbos.com'];
+
+// Old way:
+const name = details[0];
+const id = details[1];
+const id = details[1];
+
+// New way;
+const [name, id, website] = details;
+console.log(name, id, website);
+```
+
+### Destructuring from a string
+- 1st example:
+```js
+const data = 'Basketball,Sports,90210,23';
+data.split(','); // ["Basketball", "Sports", "90210", "23"]
+
+const [itemName, category, sku, iventory] = data.split(',');
+console.log(itemName, category, sku, inventory); // Basketball Sports 90210 23
+```
+
+-2nd example:
+```js
+const team = ["Wes", "Harry", "Sarah", "Keegan", "Riker"];
+
+const [captain, assistant, players] = team;
+captain; // "Wes"
+assistant; // "Harry"
+players; // "Sarah" ???
+
+// How do we get all the players?
+// We use the rest operator, which looks similar to spread operator
+const [captain, assistant, ...players] = team;
+```
+
+## Swapping Variables with Destructuring
+- Wrestling example:
+```js
+// Old way:
+let inRing = 'Hulk Hogan';
+let onSide = 'The Rock';
+
+inRing; // "Hulk Hogan"
+inRing = onSide; // "The Rock"
+inRing; // "The Rock"
+
+// So we fix that with:
+var temp = inRing;
+inRing = onSide;
+onSide = temp;
+```
+- Now we can switch variables with destructuring:
+```js
+console.log(inRing, onSide); // Hulk Hogan The Rock
+[inRing, onSide] = [onSide, inRing];
+console.log(inRing, onSide); // The Rock Hulk Hogan
+```
+
+## Destructuring Functions - Multiple returns and named defaults
+- Convert Currency example:
+```js
+function convertCurrency(amount) {
+    const converted = {
+        USD: amount * 0.76,
+        GPD: amount * 0.53,
+        AUD: amount * 1.01,
+        MEX: amount * 13.30
+    };
+}
+
+// Old way
+const hundo = convertCurrency(100);
+console.log(hundo);
+console.log(hundo.AUD); // 101
+console.log(hundo.MEX); // 1330
+
+// New way
+// The order does not matter since it's an object
+const { USD, GPB, AUD, MEX } = convertCurrency(100);
+console.log( USD, GPB, AUD, MEX ); 
+console.log(USD, AUD); // Can choose and pick which to return
+```
+
+### Named Arguments
+- Here, we are destructuring the arguments as they are passed
+- We are also setting default values
+```js
+function tipCalc({ total, tip = 0.15, tax = 0.13 }) {
+    return total + (tip * total) + (tax * total);
+}
+
+const bill = tipCalc({ total: 200, tip: 0.20, tax: 0.13 });
+console.log(bill); // 266
+
+// If we leave an argument out
+// The default tax will kick in
+const bill = tipCalc({ tip: 0.20, total: 200});
+```
+- What if we ran it without arguments?
+- We then have to destructure the whole arguments string
+```js
+// If you pass in nothing:
+function tipCalc({ total, tip = 0.15, tax = 0.13 }) {
+    return total + (tip * total) + (tax * total);
+}
+const bill = tipCalc(); // Error;
+
+// So you have to destructure 
+function tipCalc({ total = 100, tip = 0.15, tax = 0.13} = {}) {
+    return total + (tip * total) + (tax * total);
+}
+```
