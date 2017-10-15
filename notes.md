@@ -1124,7 +1124,7 @@ console.log(leftPad(colour));
 # Module #5 Destructuring
 ## Destructuring Objects
 - Destructuring allows us to extract data from objects, arrays, maps, and sets into their own variables
-- Many time we just extract properties from the top level element
+- Many time we just extract properties from the top level element which is inefficient
 ```js
 const person = {
     first: 'Wes',
@@ -1162,23 +1162,25 @@ const twitter = wes.links.social.twitter;
 const facebook = wes.links.social.facebook;
 
 // With destructuring:
-// We are also renaming the variable as we are destructuring using :
+// We are also renaming the variable as we are destructuring using:
+// We are renaming variable names from twitter to tweet and facebook to fb
 const { twitter:tweet, facebook:fb } = wes.links.social;
 ```
 
 ### Setting defaults
-- Pretend we are making a function that we are making animations
-- The function also sets some settings
+- Pretend we are making a function that does animations
+- The function sets some settings for the animations
 - We have width and color but it also needs height and fontSize
 ```js
-var settings = {width: 300, color: 'Black'}
+var settings = {width: 300, color: 'black'}
 
 // Require height and fontSize
 // We destructure all four variables
 const { width, height, color, fontSize} = settings;
 ```
-- So when we destructure we can set a fallback also
+- So when we destructure we can set a fallback also:
 ```js
+var settings = {width: 300, color: 'black'}
 const { width = 100, height = 100, color = 'blue', fontSize = 25 } = settings;
 
 width; // 300
@@ -1188,13 +1190,12 @@ fontSize; // 25
 ```
 
 ### Final example
-- This is a combination of all the destructuring:
+- This is a combination of all the destructuring properties:
 ```js
 const { w: width = 400, h: height = 500 } = {w: 800}
 
-// In this case
 // Width will be 800 and height will be 500
-// Notice the renaming of w to width and w to height also
+// Notice the renaming of w to width and h to height also
 ```
 ## Destructuring Arrays
 - Also works with arrays but we use brackets instead
@@ -1253,6 +1254,7 @@ onSide = temp;
 ```
 - Now we can switch variables with destructuring:
 ```js
+// New way
 console.log(inRing, onSide); // Hulk Hogan The Rock
 [inRing, onSide] = [onSide, inRing];
 console.log(inRing, onSide); // The Rock Hulk Hogan
@@ -1272,15 +1274,22 @@ function convertCurrency(amount) {
 
 // Old way
 const hundo = convertCurrency(100);
-console.log(hundo);
+console.log(hundo); // {USD: 76, GPB: 53, AUD: 101, MEX: 1330}
 console.log(hundo.AUD); // 101
 console.log(hundo.MEX); // 1330
 
 // New way
 // The order does not matter since it's an object
 const { USD, GPB, AUD, MEX } = convertCurrency(100);
-console.log( USD, GPB, AUD, MEX ); 
+console.log(USD, GPB, AUD, MEX ); // {76, 53, 101, 1330} 
 console.log(USD, AUD); // Can choose and pick which to return
+
+// Order does not matter
+const { MEX, GPB, AUD, USD } = convertCurrency(100);
+console.log(GPB, USD); 
+
+MEX; // 1330
+USD; // 76
 ```
 
 ### Named Arguments
@@ -1291,13 +1300,15 @@ function tipCalc({ total, tip = 0.15, tax = 0.13 }) {
     return total + (tip * total) + (tax * total);
 }
 
+// Default values kick in
 const bill = tipCalc({ total: 200, tip: 0.20, tax: 0.13 });
 console.log(bill); // 266
 
-// If we leave an argument out
-// The default tax will kick in
+// If we leave an argument out, default values kick in
+// Order of arguments does not matter
 const bill = tipCalc({ tip: 0.20, total: 200});
 ```
+  
 - What if we ran it without arguments?
 - We then have to destructure the whole arguments string
 ```js
@@ -1310,5 +1321,221 @@ const bill = tipCalc(); // Error;
 // So you have to destructure 
 function tipCalc({ total = 100, tip = 0.15, tax = 0.13} = {}) {
     return total + (tip * total) + (tax * total);
+}
+```
+
+# Module #6 Iterables & Looping
+## The for of loop
+- We now have the ForOf loop to loop over iterators
+- Iterators are things that you can loop over
+- Like arrays, strings, maps, sets, generators
+
+### For Loop
+- A For loop is confusing, hard to read
+```js
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
+
+for (let i  0; i < cuts.length; i++) {
+    console.log(cuts[i]); // Chuck Brisket Shank Short Rib
+}
+```
+
+### ForEach loop
+- Can't abort loop or skip an entry
+- Using break won't work, will return error
+- Using continue won't work, will return error
+```js
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
+
+cuts.forEach((cut) => {
+    console.log(cut); // Chuck Brisket Shank Short Rib
+});
+```
+
+### ForIn loop
+- Returns index for us
+```js
+for (const index in cuts) {
+    console.log(cuts[index]); // Chuck Brisket Shank Short Rib
+}
+```
+- The problem is that if the prototype is altered
+- There are libraries (ie MooTools) and people that change array.prototype
+- Wes's Shuffle prototype for example:
+- So it shuffles an array for us
+```js
+Array.prototype.shuffle = function() {
+    var i = this.length, j, temp;
+    if (i == 0) return this;
+    while (--i) {
+        j = Math.floor(Math.random() * (i+1));
+        temp = this[i];
+        this[i] = this[j];
+        this[j] = temp;
+    }
+    return this;
+};
+```
+- But when we run the ForIn function:
+- It iterates over the function also, which we don't want
+```js
+for (const index in cuts) {
+    console.log(cuts[index]); // Chuck Brisket Shank Short Rib function(...)
+}
+```
+  
+- Another example:
+```js
+var names = ['wes', 'lux']
+for(name in names) { console.log(name)}; // 0, 1, and a ton of methods
+```
+
+### ForOf loop
+- Need to put const in or it will leak into the global variable
+- ForOf loops can only handle iterables, it can't do objects
+```js
+for (const cut of cuts) {
+    console.log(cut); // Chuck Brisket Shank Short Rib
+}
+```
+- If we want to put a break after Brisket:
+```js
+for (const cut of cuts) {
+    console.log(cut); // Chuck Brisket
+    if(cut === 'Brisket') {
+        break;
+    }
+}
+```
+- If we want to skip Brisket:
+```js
+for (const cut of cuts) {
+    console.log(cut); // Chuck Shank Short Rib
+    if(cut === 'Brisket') {
+        continue;
+    }
+}
+```
+
+## The for of Loop in Action
+- Can generally handle all types of datas except objects
+```js
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
+
+for(const cut of cuts) {
+    console.log(cut);
+}
+```
+- We can use entries:
+- Put this into the console to experiment
+```js
+const meat = cuts.entries(); // ArrayIterator
+
+meat.next(); // Returns the next object in the array
+```
+- So we update our code:
+```js
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
+
+for(const cut of cuts.entries()) {
+    console.log(cut); // We get arrays back
+}
+
+// Instead, we can destructure:
+for(const [i, cut] of cuts.entries()) {
+    console.log(`${cut} is the ${i+1} item`); // Chuck is the 1 item, Brisket is the 2 item
+}
+```
+
+### Iterating over the arguments objects
+- Add up numbers example:
+- "arguments" looks exact like a regular array and has only length property
+```js
+function addUpNumbers() {
+    console.log(arguments); // Returns an arrayish, not an exact array
+}
+
+addUpNumbers(10,23,52,34,12,13,123);
+```
+- Normally, you can just make an array out of the "arguments", then .reduce() it
+- There's another way to convert without using an array:
+```js
+function addUpNumbers() {
+    let total = 0;
+    for (const num of arguments) {
+        total += num;
+    }
+    console.log(total);
+    return total;
+}
+
+addUpNumbers(10,23,52,34,12,13,123); // 267
+addUpNumbers(10,10); // 10
+addUpNumbers(10,10,2,34,2342,34,23,42,34,2); // 256
+```
+
+### Iterating over a string
+- You can loop over strings and also DOM collections (more later)
+```js
+const name = 'Wes Bos';
+for (const char of name) {
+    console.log(char); // W e s B o s
+}
+```
+### DOM collectors 
+- Node list, or html collections are being changed but not true arrays in most browsers
+```html
+<!--HTML-->
+<p>Hi I'm p 01</p>
+<p>Hi I'm p 02</p>
+<p>Hi I'm p 03</p>
+<p>Hi I'm p 04</p>
+<p>Hi I'm p 05</p>
+<p>Hi I'm p 06</p>
+<p>Hi I'm p 07</p>
+<p>Hi I'm p 08</p>
+<p>Hi I'm p 09</p>
+<p>Hi I'm p 10</p>
+```
+```js
+// JS
+const ps = document.querySelectorAll('p');
+console.log(ps); // Get a node list but does have forEach method
+
+for (const paragraph of ps) {
+    console.log(paragraph);
+
+    paragraph.addeventListener('click', function() {
+        console.log(this.textContent);
+    })
+}
+
+```
+
+## Using for of with Objects
+- We have not been able to iterate over objects
+- There is no [Symbol.iterator]
+- We can use `.entries()` as in `for (const prop of apple.entries()) {}`
+- Object.values() and Object.entries() are going to be in ES2017, for now we can polyfill
+- But now we can use Object.keys() for now, it returns the keys of an object
+- Wes's recommendation is to use a ForIn until we get .entries() for objects
+```js
+const apple = {
+    color: 'Red',
+    size: 'Medium',
+    weight: 50,
+    sugar: 10
+}
+
+// ForOf
+for (const prop of Object.keys(apple)) {
+    const value = apple[prop];
+    console.log(value, prop); // Red color Medium size 50 "Weight" 10 "sugar"
+}
+
+// ForIn
+for (const prop in apple) {
+    const value = apple[prop]];
+    console.log(value, prop); // Red color Medium size 50 "Weight" 10 "sugar"
 }
 ```
