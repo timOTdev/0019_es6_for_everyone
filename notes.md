@@ -1539,3 +1539,129 @@ for (const prop in apple) {
     console.log(value, prop); // Red color Medium size 50 "Weight" 10 "sugar"
 }
 ```
+
+# Module #7 An Array of Array Improvements
+## Array.from() and Array.of()
+- These methods are not on the prototype, they are on the array itself
+- Array.from() will turn something into an array from something that is array-ish
+- People example:
+```html
+<div class="people">
+    <p>Wes</p>
+    <p>Kait</p>
+    <p>Snickers</p>
+</div>
+```
+```js
+const people = document.querySelectorAll('.people p');
+const names = people.map(person => person.textContent);
+
+console.log(people); // Nodelist
+```
+- Since it is a Nodelist, we need to convert it
+```html
+<div class="people">
+    <p>Wes</p>
+    <p>Kait</p>
+    <p>Snickers</p>
+</div>
+```
+```js
+// Method 1
+// We make an array from the DOM elements
+const people = document.querySelectorAll('.people p');
+const peopleArray = Array.from(people);
+const names = peopleArray.map(person => person.textContent);
+console.log(names);
+
+// Method 1 refactor
+const people = Array.from(document.querySelectorAll('.people p');)
+const names = people.map(person => person.textContent);
+console.log(names);
+
+// Method 2
+// Array.from has a built in map function
+const people = document.querySelectorAll('.people p');
+const peopleArray = Array.from(people, person => {return person.textContent});
+console.log(peopleArray);
+```
+
+### Converting arguments object to an array
+- Common use case because "arguments" reserve keyword is not a real array
+```js
+function sumAll() {
+    console.log(arguments); // Arrayish, not an array
+    arguments.reduce((prev, next) => prev + next, 0);
+}
+
+sumAll(2,34,23,234,234,234234,234234,2342);
+
+// We need to convert to a real array
+function sumAll() {
+    const nums = Array.from(arguments);
+    arguments.reduce((prev, next) => prev + next, 0);
+}
+```
+
+### Array.of() method
+- When we need to convert arguments into an array:
+- It could be numbers or strings
+- You have to capitalize the A in array or will not work
+- Different from Array() method because that will return an empty array with length property if supplied a single digit
+```js
+const ages = Array.of(12,4,23,62,34);
+console.log(ages); // returns an array of these numbers
+```
+
+## Array.find() and .findIndex()
+- Helps you to find some data that comes back from an API
+- .find() helps you find if something exist, returns boolean
+- .findIndex() finds the index where something occurs
+- Twitter example;
+```js
+// Will now return that specific instagram post from that ID
+// To find multiple objects, use .filter()
+const post = posts.find(post => {
+    console.log(post.code);
+    if(post.code === 'VBgtGQcSf') {
+        return true;
+    }
+    return false;
+})
+
+// Refactors to:
+const code = 'VBgtGQcSf';
+const post = posts.find(post => post.code === code);
+console.log(post);
+```
+
+### .findIndex()
+```js
+const postIndex = posts.findIndex((post) => {
+    if(post.code === code) {
+        return true;
+    }
+    return false;
+})
+
+// Refactors to:
+const postIndex =  posts.findIndex(post => post.code === code);
+```
+
+## Array.some() and .every()
+- Not part of ES6 but want to showcase it
+- .some() checks if at least one meets the requirement
+- .every() checks if all meets the requirement
+```js
+const ages = [32, 15, 19, 12];
+const youngins = [1, 2, 2, 5];
+
+// Is there at least one adult in the group? (>18 years old)
+const adultPresent = ages.some(age => age >= 18);
+console.log(adultPresent); // true
+console.log(youngins); // false
+
+// Is everyone old enough to drink? (>19 years old)
+const allOldEnough = ages.every(age => age >= 19);
+console.log(allOldEnough); // false
+```
