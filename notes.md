@@ -1867,9 +1867,136 @@ const [name, id, ...runs] = runner;
 console.log(name, id, runs); // Wes Bos 123 > [5.5, 5, 3, 6, 35]
 ```
 
-- Team example;
+- Team example:
 ```js
 const team = ['Wes', 'Kait', 'Lux', 'Sheena', 'Kelly'];
 const [captain, assistant, ...players] = team;
 console.log(captain, assitant, players); // Wes Kait > ["Lux", "Sheena", "Kelly"]
-``
+```
+
+# Module #9 Object Literal Upgrades
+## Object Literal Upgrades
+- When you need to put variables into an object:
+```js
+const first = 'snickers';
+const last = 'bos';
+const age = 2;
+const breed = 'King Charles Cav';
+
+// Old way
+const dog = {
+    first: first,
+    last: last,
+    age: age,
+    breed: breed,
+};
+console.log(dog); // Object {first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
+
+// New Way
+// If you have the same value names as key names, you can just:
+const dog = {
+    first,
+    last,
+    age,
+    breed,
+};
+console.log(dog); // Object {first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
+```
+
+- You can also change or add the name of the keys if you want:
+```js
+const dog = {
+    firstName: first,
+    last,
+    age,
+    breed,
+    pals: ['Hugo', 'Suny']
+};
+console.log(dog); // Object {firstName: "snickers", last: "bos", age: 2, breed: "King Charles Cav", pals: Array[2]}
+``` 
+
+### When we have methods inside of an object
+- Modal example:
+```js
+// Standard syntax
+const modal = {
+    create: function() {
+
+    },
+    open: function() {
+
+    },
+    close: function() {
+
+    }
+}
+
+// ES6 syntax
+// You should not use arrow method with methods of a object
+// You can add arguments as normal
+const modal = {
+    create(selector) {
+
+    },
+    open(content) {
+
+    },
+    close(goodbye) {
+
+    }
+}
+```
+
+### Computed property names
+- When we need to set a key on an object
+- T-Shirt example:
+```js
+// Standard syntax
+const key = 'pocketColor';
+const value = '#ffc600';
+
+const tShirt = {
+    [key]: value
+}
+
+console.log(tShirt); // Object{pocketColor: "#ffc600"}
+
+// ES6 syntax
+const key = 'pocketColor';
+const value = '#ffc600';
+
+function invertColor(color) {};
+const tShirt = {
+    [key]: value,
+    [`${key}Opposite`]: invertColor(value);
+};
+
+console.log(tShirt); // Object{pocketColor: "#ffc600"}
+
+// In the past, you had to make a tShirt object and update that object
+const tShirt = {};
+
+tShirt[key]: value,
+tShirt[`${key}Opposite`]: invertColor(value)
+```
+
+### Pulling values from both arrays
+- We want to pair values in both arrays into an object
+- Shirt spec example:
+```js
+const keys = ['size', 'color', 'weight'];
+const values = ['medium', 'red', 100];
+
+// Standard syntax
+const shirt = {
+   // [keys[0]] take out brackets
+}
+
+// ES6 syntax
+const shirt = {
+    [keys.shift()]: values.shift(),
+    [keys.shift()]: values.shift(),
+    [keys.shift()]: values.shift(),
+}
+// Object {size: "medium", color: "red", weight: "100"}
+```
