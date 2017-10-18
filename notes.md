@@ -1665,3 +1665,211 @@ console.log(youngins); // false
 const allOldEnough = ages.every(age => age >= 19);
 console.log(allOldEnough); // false
 ```
+
+# Module #8 Say Hello to ...Spread and ...Rest
+## Spread Operator Introduction
+- Takes every item from an iterable and returns each
+- In this example, we are trying to add veg to the middle of the 2 arryas
+```js
+//Old way
+const featured = ['Deep Dish', 'Pepperoni', 'Hawaiian'];
+const specialty = ['Meatzza', 'Spicy Mama', 'Margherita'];
+
+let pizzas = pizzas.concat(featured);
+pizzas.push('veg');
+pizzas = pizzas.concat(specialty);
+consoel.log(pizzas);
+
+//New way
+const pizzas = [...featured, ...specialty];
+    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'Meatzza', 'Spicy Mama', 'Margherita'];
+const pizzas = [...featured, 'veg', ...specialty];
+    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+``
+- If you use spread on a string:
+- It goes over each character instead
+```js
+['wes'] // ["Wes"]
+[...'wes'] // ["w", "e", "s"]
+```
+
+### Copying an array
+```js
+// Old Way
+const pizzas = [...featured, 'veg', ...specialty];
+    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+const fridayPizzas = pizzas;
+    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+
+fridayPizzas[0] = "Canada Pie";
+fridayPizzas;
+    // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+pizzas;
+    // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+
+// But pizzas array also changed which we do not want
+// We simply reference the array, not make a copy
+// We use to use concat:
+const fridayPizas = [].concat.pizzas;
+
+// New Way
+const fridayPizzas = [...pizzas];
+fridayPizzas[0] = "Canada Pie";
+
+fridayPizzas;
+    // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+pizzas;
+    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+```
+
+## Spread Exercise
+- We are spreading a string, and each letter will animate
+- You can hover over each letter so you have to wrap in a span
+- Use map, spread, querySelectorAll
+
+## More Spread Examples
+- Another example when we want to return from a DOM node:
+```html
+<div class="people">
+    <p>Wes</p>
+    <p>Kait</p>
+    <p>Randy</p>
+</div>
+```
+```js
+const people = document.querySelectorAll(".people p");
+const names = people.map((person) => person.textContent);
+
+// Does not work because people is a node list, not an array
+```
+- So we need to use 1 of 2 ways:
+- Wes thinks Array.from() reads better
+```js
+// Method 1: Array.from
+const people = Array.from(document.querySelectorAll(".people p"));
+const names = (people.map((person) => person.textContent));
+
+//Method 2 : Spread operator
+const people = [...document.querySelectorAll(".people p")];
+const names = (people.map((person) => person.textContent));
+```
+
+### New array off a property of an object
+- The spread is a true copy and not a reference
+```js
+const deepDish = {
+    pizzaName: 'Deep Dish',
+    size: 'Medium',
+    ingredients: ['Marinara', 'Italian Sausage', 'Dough', 'Cheese']
+}
+
+// So we add the ingredients to our shopping list to buy
+const shoppingList = ['Milk', 'Flour', ...deepDish.ingredients];
+```
+
+### Deleting an object off the array
+- He wants to remove index 2 comment
+```js
+const comments = [
+    { id: 209384, text: 'I love your dog!' },
+    { id: 523423, text: 'Cuuute! 🐐' },
+    { id: 632429, text: 'You are so dumb' },
+    { id: 192834, text: 'Nice work on this wes!' },
+];
+
+// We have the id of the commment
+const id = 632429;
+const commentIndex = comments.findIndex(comment => comment.id === id);
+
+// We know now it's at index 2, so we are going to make a new comment variable
+const newComments = [comments.slice(0, commentIndex), comments.slice(commentIndex + 1)];
+
+// But we get an array of arrays, so we have to use the spread operator
+const newComments = [...comments.slice(0, commentIndex), ...comments.slice(commentIndex + 1)];
+```
+## Spreading into a function
+- We want to tack values from an array onto another array
+- Inventors example:
+```js
+const inventors = ['Einstein', 'Newton', 'Galileo'];
+const newInventors = ['Musk', 'Jobs'];
+
+// Not our target
+inventors.push(newInventors) // ['Einstein', 'Newton', 'Galileo', Array[2]]
+
+// Old Way
+// It pushes each item into an array instead of the whole array
+inventors.push.apply(inventors, newInventors);
+console.log(inventors) = ['Einstein', 'Newton', 'Galileo', 'Musk', 'Jobs']
+
+// New Way
+inventors.push(...newInventors);
+console.log(inventors) = ['Einstein', 'Newton', 'Galileo', 'Musk', 'Jobs']
+```
+  
+### Spread in a function
+```js
+const name = ['Wes', 'Bos'];
+
+function sayHi(first, last) {
+    alert(`Hey there ${first} ${last}`);
+}
+
+// Old way
+sayHi(name[0], name[1]); 
+
+// New Way
+sayHi(...name);
+```
+
+## The ...rest param in Functions and destructuring
+- Rest is the opposite of Spread
+- Rest packs items into an array
+```js
+function convertCurrency(rate, amount1, amount2, amount3, amount4)
+convertCurrency(1.54, 10, 23, 52, 1, 56);
+
+// New way
+function convertCurrency(rate, ...amounts) {
+    console.log(rate, amounts);
+}
+convertCurrency(1.54, 10, 23, 52, 1, 56); // 1.54 > [10, 23, 52, 1, 56]
+convertCurrency(1.54, 10); // 1.54 > [10]
+```
+- Then we want to take the amounts and multiply by the rate:
+```js 
+function convertCurrency(rate, ...amounts) {
+    return amounts.map(amount => amount * rate);
+}
+
+const amounts = convertCurrency(1.54, 10, 23, 52, 1, 56);
+console.log(amounts); // [15.4, 35.42, 80.08, 1.5, 86.24]
+```
+- We can also use as many pre-arguments also:
+```js 
+function convertCurrency(rate, tax, tip ...amounts) {
+    return amounts.map(amount => amount * rate);
+}
+
+const amounts = convertCurrency(1.54, 10, 23, 52, 1, 56);
+console.log(amounts); // [15 10 23 > [52, 1, 56]]
+```
+  
+- Runner example:
+```js
+cons runner = ['Wes Bos', 123, 5.5, 5, 3, 6, 35];
+const [name, id, runs] = runner;
+console.log(name, id, runs); // Wes Bos 123 5.5
+
+// But we can get the rest of the stats using the rest param:
+cons runner = ['Wes Bos', 123, 5.5, 5, 3, 6, 35];
+const [name, id, ...runs] = runner;
+console.log(name, id, runs); // Wes Bos 123 > [5.5, 5, 3, 6, 35]
+```
+
+- Team example;
+```js
+const team = ['Wes', 'Kait', 'Lux', 'Sheena', 'Kelly'];
+const [captain, assistant, ...players] = team;
+console.log(captain, assitant, players); // Wes Kait > ["Lux", "Sheena", "Kelly"]
+``
