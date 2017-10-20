@@ -1202,12 +1202,12 @@ const { w: width = 400, h: height = 500 } = {w: 800}
 ```js
 const details = ['Wes Bos', 123, 'wesbos.com'];
 
-// Old way:
+// Standard syntax:
 const name = details[0];
 const id = details[1];
 const id = details[1];
 
-// New way;
+// ES6 syntax;
 const [name, id, website] = details;
 console.log(name, id, website);
 ```
@@ -1239,7 +1239,7 @@ const [captain, assistant, ...players] = team;
 ## Swapping Variables with Destructuring
 - Wrestling example:
 ```js
-// Old way:
+// Standard syntax
 let inRing = 'Hulk Hogan';
 let onSide = 'The Rock';
 
@@ -1254,7 +1254,7 @@ onSide = temp;
 ```
 - Now we can switch variables with destructuring:
 ```js
-// New way
+// ES6 syntax
 console.log(inRing, onSide); // Hulk Hogan The Rock
 [inRing, onSide] = [onSide, inRing];
 console.log(inRing, onSide); // The Rock Hulk Hogan
@@ -1272,13 +1272,13 @@ function convertCurrency(amount) {
     };
 }
 
-// Old way
+// Standard syntax
 const hundo = convertCurrency(100);
 console.log(hundo); // {USD: 76, GPB: 53, AUD: 101, MEX: 1330}
 console.log(hundo.AUD); // 101
 console.log(hundo.MEX); // 1330
 
-// New way
+// ES6 syntax
 // The order does not matter since it's an object
 const { USD, GPB, AUD, MEX } = convertCurrency(100);
 console.log(USD, GPB, AUD, MEX ); // {76, 53, 101, 1330} 
@@ -1671,7 +1671,7 @@ console.log(allOldEnough); // false
 - Takes every item from an iterable and returns each
 - In this example, we are trying to add veg to the middle of the 2 arryas
 ```js
-//Old way
+// Standard syntax
 const featured = ['Deep Dish', 'Pepperoni', 'Hawaiian'];
 const specialty = ['Meatzza', 'Spicy Mama', 'Margherita'];
 
@@ -1680,7 +1680,7 @@ pizzas.push('veg');
 pizzas = pizzas.concat(specialty);
 consoel.log(pizzas);
 
-//New way
+// ES6 syntax
 const pizzas = [...featured, ...specialty];
     // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'Meatzza', 'Spicy Mama', 'Margherita'];
 const pizzas = [...featured, 'veg', ...specialty];
@@ -1695,7 +1695,7 @@ const pizzas = [...featured, 'veg', ...specialty];
 
 ### Copying an array
 ```js
-// Old Way
+// Standard syntax
 const pizzas = [...featured, 'veg', ...specialty];
     // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
 const fridayPizzas = pizzas;
@@ -1712,7 +1712,7 @@ pizzas;
 // We use to use concat:
 const fridayPizas = [].concat.pizzas;
 
-// New Way
+// ES6 syntax
 const fridayPizzas = [...pizzas];
 fridayPizzas[0] = "Canada Pie";
 
@@ -1797,12 +1797,12 @@ const newInventors = ['Musk', 'Jobs'];
 // Not our target
 inventors.push(newInventors) // ['Einstein', 'Newton', 'Galileo', Array[2]]
 
-// Old Way
+// Standard syntax
 // It pushes each item into an array instead of the whole array
 inventors.push.apply(inventors, newInventors);
 console.log(inventors) = ['Einstein', 'Newton', 'Galileo', 'Musk', 'Jobs']
 
-// New Way
+// ES6 syntax
 inventors.push(...newInventors);
 console.log(inventors) = ['Einstein', 'Newton', 'Galileo', 'Musk', 'Jobs']
 ```
@@ -1815,10 +1815,10 @@ function sayHi(first, last) {
     alert(`Hey there ${first} ${last}`);
 }
 
-// Old way
+// Standard syntax
 sayHi(name[0], name[1]); 
 
-// New Way
+// ES6 syntax
 sayHi(...name);
 ```
 
@@ -1829,7 +1829,7 @@ sayHi(...name);
 function convertCurrency(rate, amount1, amount2, amount3, amount4)
 convertCurrency(1.54, 10, 23, 52, 1, 56);
 
-// New way
+// ES6 syntax
 function convertCurrency(rate, ...amounts) {
     console.log(rate, amounts);
 }
@@ -1883,16 +1883,16 @@ const last = 'bos';
 const age = 2;
 const breed = 'King Charles Cav';
 
-// Old way
+// Standard syntax
 const dog = {
     first: first,
     last: last,
     age: age,
     breed: breed,
 };
-console.log(dog); // Object {first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
+console.log(dog); // Object{first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
 
-// New Way
+// ES6 syntax
 // If you have the same value names as key names, you can just:
 const dog = {
     first,
@@ -1900,7 +1900,7 @@ const dog = {
     age,
     breed,
 };
-console.log(dog); // Object {first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
+console.log(dog); // Object{first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
 ```
 
 - You can also change or add the name of the keys if you want:
@@ -1910,9 +1910,9 @@ const dog = {
     last,
     age,
     breed,
-    pals: ['Hugo', 'Suny']
+    pals: ['Hugo', 'Sunny']
 };
-console.log(dog); // Object {firstName: "snickers", last: "bos", age: 2, breed: "King Charles Cav", pals: Array[2]}
+console.log(dog); // Object{firstName: "snickers", last: "bos", age: 2, breed: "King Charles Cav", pals: Array[2]}
 ``` 
 
 ### When we have methods inside of an object
@@ -1999,4 +1999,204 @@ const shirt = {
     [keys.shift()]: values.shift(),
 }
 // Object {size: "medium", color: "red", weight: "100"}
+```
+
+# Module #10 Promises
+## Promises
+- Often used when you're using jQuery ($.getJSON) or AJAX ($.ajax)
+- Here, Wes is using fetch API which is built into the browser
+- Definition: Something that happens in the future and is asynchronous
+- Fetch queues up and gives you a promise (fetch(''))
+- When the response returns, it will deliver the results 
+- We can set up listeners (.then())
+- Here's a basic setup:
+```js
+const postsPromise = fetch('http://wesbos.com/wp-json/wp/v2/posts');
+
+// Fetch API
+postsPromise.then(data => {
+    console.log(data);
+})
+
+// Just like jQuery
+$('a').on('click', function() {
+    alert('hey');
+})
+```
+- But where is our data?
+- Doesn't know to return as json so we have to set it:
+- We also set .catch() in case of any errors along the way
+```js
+const postsPromise = fetch('http://wesbos.com/wp-json/wp/v2/posts');
+
+// Fetch API
+postsPromise
+    .then(data => data.json())
+    .then(data => {console.log(data)})
+    .catch((err) => {console.error(err)})
+})
+```
+
+## Building your own Promises
+- We can set resolve and reject parameters
+- We can even set a timeout
+- Set a throw error as well to help debug which line
+```js
+const p = new Promise((resolve, reject)) => {
+    setTimeout(() => {
+        resolve('Wes is cool!');
+    }, 1000);
+    reject(Error('Err wes isn\'t cool'));
+});
+
+p
+    .then(data => {
+        console.log(data);
+    })
+    .catch(err => {
+        console.error(err);
+    })
+```
+## Chaining Promises + Flow Control
+- Let's simulate a database where we are trying to pull posts and authors
+- So we have to fetch promises in practice
+- Here, we are creating a new promise
+- Find the post that we want
+- Send the post back
+```js
+const posts = [
+    { title: 'I love JavaScript', author: 'Wes Bos', id: 1 },
+    { title: 'CSS!', author: 'Chris Coyier', id: 2 },
+    { title: 'Dev tools tricks', author: 'Addy Osmani', id: 3 },
+];
+
+const authors = [
+    { name: 'Wes Bos', twitter: '@wesbos', bio: 'Canadian Developer' },
+    { name: 'Chris Coyier', twitter: '@chriscoyier', bio: 'CSS Tricks and CodePen' },
+    { name: 'Addy Osmani', twitter: '@addyosmani', bio: 'Googler' },
+];
+
+function getPostById(id) {
+    return new Promise((resolve, reject) => {
+        const post = posts.find(post => post.id === id);
+        if(post) {
+            resolve(post);
+        } else {
+            reject(Error('No Post Was Found'));
+        }
+    })
+}
+
+getPostById(2)
+    .then(post => {
+        console.log(post)
+    });
+```
+
+### Hydrating
+- We want to replace the author string in posts with authors object
+- We create a new promise
+- We find the author
+- "Hydrate" the post object with the author object
+```js
+const posts = [
+    { title: 'I love JavaScript', author: 'Wes Bos', id: 1 },
+    { title: 'CSS!', author: 'Chris Coyier', id: 2 },
+    { title: 'Dev tools tricks', author: 'Addy Osmani', id: 3 },
+];
+
+const authors = [
+    { name: 'Wes Bos', twitter: '@wesbos', bio: 'Canadian Developer' },
+    { name: 'Chris Coyier', twitter: '@chriscoyier', bio: 'CSS Tricks and CodePen' },
+    { name: 'Addy Osmani', twitter: '@addyosmani', bio: 'Googler' },
+];
+
+function getPostById(id) {
+    return new Promise((resolve, reject) => {
+        const post = posts.find(post => post.id === id);
+        if(post) {
+            resolve(post);
+        } else {
+            reject(Error('No Post Was Found'));
+        }
+    })
+}
+
+function hydrateAuthor(post) {
+    return new Promise((resolve, reject) => {
+        const authorDetails = authors.find(person => person.name === post.author)
+        if(authorDetails) {
+            post.author = authorDetails;
+            resolve(post);
+        } else {
+            reject(Error('Cannot find the author'));
+        }
+    });
+}
+
+getPostById(2)
+    .then(post => {
+        console.log(post);
+        return hydrateAuthor(post);
+    })
+    .then(post => {
+        console.log(post);
+    })
+    .catch(err => {
+        console.error(err);
+    })
+
+getPostById(2) // { name: 'Chris Coyier', twitter: '@chriscoyier', bio: 'CSS Tricks and CodePen' }
+getPostById(5) // No Post Was Found!
+getPostById(3) // Cannot find the author if the author's name is mispelled
+```
+
+## Working with Multiple Promises
+- Now, we want to fetch multiple promises
+- We are trying to get the weather and tweets
+- We can use Promise.all() for this purpose
+- Notice that the slowest time is the rate limiting step (ie weather 2 secs, tweets 0.5 sec)
+```js
+const weather = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve({ temp: 29, conditions: 'Sunny with Clouds'});
+    }, 2000);
+});
+
+const tweets = new Promise((resolve) => {
+    setTimeout(() => {
+        resolve(['I like cake', 'BBQ is good too!']);
+    }, 500);
+});
+
+Promise
+    .all([weather, tweets])
+    .then(responses => {
+        const [weatherInfo, tweetsInfo] = responses;
+        console.log(weatherInfo, tweetsInfo)
+    })
+```
+
+### Using real data
+- With fetch API, you need to be running it through some sort of server
+- It's a CORS issue
+- Wes has a browser-sync plugin
+- We have to map the response to JSON beccause there can be multiple returns:
+1. arrayBuffer()
+2. blob()
+3. json()
+4. text()
+5. formData()
+```js
+const postsPromise = fetch('http://wesbos.com/wp-json/wp/v2/posts');
+const streetCarsPromise = fetch('http://data.ratp.fr/api/datasets/1.0/search/?q=paris');
+
+Promise
+    .all([postsPromise, streetCarsPromise])
+    .then(responses => {
+        return Promise.all(responses.map(res => res.json()))
+    })
+    .then(responses => {
+        console.log(responses);
+    });
 ```
