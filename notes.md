@@ -2252,3 +2252,215 @@ console.log(syms); // Returns an array of the key of the symbol
 const data = syms.map(map => classRoom[sym]);
 console.log(data); // Returns an array of objects
 ```
+
+# Module #12 Code Quality with ESLint
+## Getting started with ESLint
+- Most people have moves over to ESlint from JSLint or JSHint
+- Configure it properly and it will show you errors
+- It is more updated for ES6
+- Takes an hour or 2 to adjust to it
+- Helps improve your code
+- Need nodeJS and NPM install
+- Run:
+```
+node -v // For node version, 4 and up
+npm -v // For npm version, 3 and up
+npm install -g eslint // Install ESlint, download the latest version
+eslint <filename>
+```
+
+- You an run eslint globally or project by project
+- We are going to create and eslintrc file
+```
+touch .eslintrc // In the home directory
+```
+- Set the environment, style, and rules
+- Spend time and try to understand the rules
+- Rules can be off, warn, or error (0, 1, 2 respectively)
+```
+{
+    "env": {
+        "es6": true,
+        "browser": true,
+        "jquery": true,
+    },
+    "extends": "eslint:recommended"
+    "rules": {
+        "no-console": "warn"
+    }
+}
+```
+
+## Airbnb ESLint Settings
+- A style guide put out by AirBnB engineers
+- Most people adopt AirBnB style guide and then add their own rules
+- Install from [ESLint AirBnB](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb)
+
+### 1. Install option 1
+- This worked for me
+```
+npm i -g eslint-config-airbnb-standard
+```
+
+### 2. Install option 2
+- In config, extend airbnb instead
+```
+{
+    "env": {
+        "es6": true,
+        "browser": true,
+        "jquery": true,
+    },
+    "extends": "airbnb"
+    "rules": {
+        "no-console": "warn"
+    }
+}
+```
+- Run in terminal to install AirBnB style guide
+```
+sudo npm install -g eslint eslint-config-airbnb eslint-plugin-jsx-a11y eslint-plugin-import eslint-plugin-react
+```
+- Remove eslint since we already have it
+```
+sudo npm install -g eslint-config-airbnb eslint-plugin-jsx-a11y eslint-plugin-import eslint-plugin-react
+```
+### Working with errors
+- We can run "fix" to clear basic spacing errors
+- The second part of the error is the error message which we can look on eslint website
+- If you don't have any errors, it will not display errors
+```
+eslint bad-code.js --fix
+```
+  
+- You can have files for local projects and globally
+- The .eslintrc is going to be in your home directory
+- Wes then went over some bad code and how to add exceptions
+- The first one has a warn and parameters also
+- You should start using the Airbnb and conform the rules to your needs
+```
+"no-unused-vars": [1,{ "argsIgnorePattern": "res|next|^err"}],
+"comma-dangle": 0,
+"no-console": 0,
+etc.
+```
+
+## Line and File Specific Settings
+- Sometimes there are programs that require commands in your file
+- Like Google Analytics or Twitter:
+```
+ga.track();
+twttr.trackConversion();
+```
+### Setting globals in your file
+- You should set globals file by file
+```
+/* globals twttr ga */
+```
+
+- Array.prototype.includes() is an ES7 syntax
+- You need to polyfill it but usually considered a no-no to change your prototypes
+- For example we can disable and enable eslint for the entire file
+```
+/* eslint-disable no-extend-native */
+```
+- Disable per line basis
+```
+/* eslint-disable no-extend native */
+/* eslint-enable no-extend-native */
+```
+- For example you can ignore this entire block of polyfill that we weant
+```js
+/* eslint-disable no-extend native */
+// https://tc39.github.io/ecma262/#sec-array.prototype.includes
+if (!Array.prototype.includes) {
+    Object.defineProperty(Array.prototype, 'includes', {
+        value: function(searchElement, fromIndex) {
+            
+      // 1. Let O be ? ToObject(this value).
+      if (this == null) {
+          throw new TypeError('"this" is null or not defined');
+      }
+
+      var o = Object(this);
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0;
+
+      // 3. If len is 0, return false.
+      if (len === 0) {
+          return false;
+      }
+
+      // 4. Let n be ? ToInteger(fromIndex).
+      //    (If fromIndex is undefined, this step produces the value 0.)
+      var n = fromIndex | 0;
+
+      // 5. If n ≥ 0, then
+      //  a. Let k be n.
+      // 6. Else n < 0,
+      //  a. Let k be len + n.
+      //  b. If k < 0, let k be 0.
+      var k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+      function sameValueZero(x, y) {
+          return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y));
+      }
+
+      // 7. Repeat, while k < len
+      while (k < len) {
+          // a. Let elementK be the result of ? Get(O, ! ToString(k)).
+        // b. If SameValueZero(searchElement, elementK) is true, return true.
+        // c. Increase k by 1. 
+        if (sameValueZero(o[k], searchElement)) {
+            return true;
+        }
+        k++;
+      }
+
+      // 8. Return false
+      return false;
+    }
+  });
+}
+/* eslint-enable no-extend-native */
+```
+
+## ESLint Plugins
+- There are good plugins for eslint
+- Visit [Awesome-ESlint](https://github.com/dustinspecker/awesome-eslint#plugins)
+- Wes uses it to fix javascript in his html and markdown files
+```
+"plugins": ["html", "markdown"]
+```
+- Tip: you can use the glob pattern (ie *.md)
+
+## ESLint inside Atom and Sublime Text
+- Ideally, you would want eslint inside your editor
+- Every editor should have its own lint integration
+
+### With Sublime
+- SublimeLinter 3 is one for Sublime Text
+- You need to have package control installed
+- Wes has `SublimeLinter` and `SublimeLiner-contrib-eslint`
+- You need to have ESLint globally installed
+- Run `eslint --version` to check
+- Make sure to do a full shutdown on your editor
+- You can also set the lint mode
+- Wes has it on load/save his editor
+- Errors pop on the bottom bar of the screen
+
+### With Atom
+- It tells you the errors on the screen
+- It brings you to the error docs on click
+- You need to install linter and linter-eslint packages
+
+## Only Allow ESLint Passing Code into your git repos
+- You can install a linter right in your githug repo
+- Can also install a "git-hook", requiring code pass by ESLint rules before merging
+- It keeps code quality for everyone consistent
+```
+git init es6git
+```
+- There's a hook folder in the .git folder
+- Code that runs before something opens
