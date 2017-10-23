@@ -2200,3 +2200,55 @@ Promise
         console.log(responses);
     });
 ```
+
+# Module #11 Symbols
+## All About Symbols
+- We have a 7th type of primitive now: symbols
+- Helps us to avoid naming collisions
+- They are absolutely unique
+```js
+// Think of Wes here as a descriptor
+const wes = Symbol('Wes'); // Think of it as a unique symbol A3awD21Qhd8kdqpx
+const person = Symbol('Wes')
+
+wes; // Symbol(Wes)
+person; // Symbol(Wes)
+wes === person; // false
+wes == person; // false
+```
+### Classroom example
+- Here, we have two Olivia's but we don't want them to collide
+- This is a small example but think of bigger applications like graphics or 
+svg
+- Symbols are not innumerable so you can't loop through them
+```js
+const classRoom = {
+    'Mark': { grade: 50, gender: 'male' },
+    'Olivia': { grade: 80, gender: 'female' },
+    'Olivia': { grade: 70, gender: 'female' },
+}
+```
+- We can use symbols here:
+```js
+const classRoom = {
+    [Symbol('Mark')]: { grade: 50, gender: 'male' },
+    [Symbol('Olivia')]: { grade: 80, gender: 'female' },
+    [Symbol('Olivia')]: { grade: 70, gender: 'female' },
+}
+
+// Symbols are innumerable and can't loop over them
+// Good way to store private data
+// This for loop will not work
+for (person in classRoom) {
+    console.log(person)
+}
+```
+- We can use a property to access the object
+```js
+const syms = Object.getOwnPropertySymbols(classRoom);
+console.log(syms); // Returns an array of the key of the symbol
+
+// To get the data
+const data = syms.map(map => classRoom[sym]);
+console.log(data); // Returns an array of objects
+```
