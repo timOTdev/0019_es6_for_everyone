@@ -2464,3 +2464,206 @@ git init es6git
 ```
 - There's a hook folder in the .git folder
 - Code that runs before something opens
+
+# Module #13 JavaScript Modules and Using npm
+## JavaScript Modules and WebPack 2 Tooling Setup
+- A JS module file that has functions that you can use in other files or share with other devs
+- Browser support for ES6 modules is not as great so we need some tooling
+- An example of importing modules:
+```js
+import slug from 'slug';
+import { uniq, shuffle } from 'lodash'; 
+import Flickity from 'flickity';
+```
+
+### Setting up our modules with NPM
+- You can use JSpm or Bowser, but NPM is most popular
+- Package JSON will save all the modules for our app
+- Try to install other libraries you would use
+- Note: JSONP does not work with fetch api but we an install jsonp package
+```js
+touch app.js // Creating an entry point
+npm init // Make a JSON file for the package, makes a package.json
+npm install slug --save // Installs the slug module
+npm install lodash flickity --save // Install lodash and slug
+install jquery --save
+install insane --save
+install jsonp --save
+```
+- Then we need to add import statements also in our HTML file
+```js
+import { uniq } from 'lodash';
+import insane from 'insane';
+```
+- However, you will error when opening the file in the browser
+- Reason is that it doesn't know how to handle the import statement
+- So now we need another tool: Webpack
+- If you ever delete your node module folder since it's large file size
+- You can reinstall it
+- You don't need the node_modules folder unless you need offline access
+- Don't worry too much about what's in those folders
+```
+trash node_modules
+npm install
+```
+
+### Setting up webpack and babel
+```
+npm install webpack --save-dev
+npm install babel-loader babel-core babel-preset-es2015-native-modules --save-dev
+```
+- We also have to enable it
+- Wes opened a file called webpack.config.js and provided this code
+- He explained all these settings in the video
+```js
+
+const webpack = require('webpack');
+const nodeEnv = process.env.NODE_ENV || 'production';
+
+module.exports = {
+  devtool: 'source-map',
+  entry: {
+    filename: './app.js'
+  },
+  output: {
+    filename: '_build/bundle.js'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015-native-modules']
+        }
+      }
+    ]
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      },
+      sourceMap: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+    })
+  ]
+};
+```
+## Creating your own Modules
+- Wes made an src folder keep all the modules in
+- He's going to create 1 function and 2 strings
+- He made a config.js for api keys and keys
+- You don't need to put the extension on the end in the import statement
+```js
+// app.js
+import apiKey from './src/config';
+
+// config.js
+const apiKey = 'abc123';
+```
+- Variables are scoped to the module and not global
+- Check out the [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export) about exporting
+
+- 2 type of exports:
+### 1. Default export
+- Export as default, import as any name you would like
+- You can only have **one default export** per module
+- But you can have as many named exports as you want
+```js
+// app.js
+import apiKey from './src/config'; // Can import as the same name
+import wesIsCool from './src/config'; // Or can make a custom name, it will automatically understand since there is only 1 default export per module
+
+console.log(apiKey);
+console.log(wesIsCool);
+
+// config.js
+const apiKey = 'abc123';
+
+export default apiKey;
+```
+
+### 2. Named export
+- Export as that variable name, import as that same exact name
+- Must use brackets for named exports
+- Looks like destructuring but not exactly
+```js
+// app.js 
+import { apiKey, url, sayHi, age, dog } from '.src/config';
+sayHi('wes');
+
+// config.js
+export const apiKey = 'abc123';
+export const url = 'http://wesbos.com';
+
+// You can export functions also
+export function sayHi(name) {
+    console.log(`Hello there ${name}`);
+} 
+// Can export multiple variables at once
+const age = 100;
+const dog = 'snickers';
+export { age, dog }
+```
+- You can also rename the variables if you desire using "as"
+- It can be done via import or export side
+```js
+// app.js
+import { apiKey as key, old} from './src/config';
+console.log(apiKey);
+console.log(old);
+
+// config.js 
+export const apiKey = 'abc123';
+
+const age = 100;
+const dog = 'snickers';
+export { age as old, dog }
+```
+
+## More ES6 Module Practice
+- We are going to make a user and generate a gravatar url string
+- Wes also had to download base-64 plugin as well `install base-64 --save`
+- Note that base-64 was exported as a default export
+- We are also using the slug plugin here
+```js
+// app.js
+import User, { createURL, gravatar} from './src/user';
+
+const wes = new User('Wes Bos', 'wesbos@gmail.com', 'wesbos.com');
+const profile = createURL(wes.name);
+const image = gravatar(wes.email);
+
+console.log(wes);
+console.log(profile);
+
+// user.js
+import slug from 'slug';
+import { url } from './config';
+import base64 from 'base-64';
+
+export default function User(name, email, website) {
+    return { name, email, website }
+    }
+}
+
+export function createURL(name) {
+    return `${url}/users/${slug(name)}`;
+}
+
+export function gravatar(email) {
+    const has = base64.encode(email);
+    const photoURL = `https://www.gravatar.com/avatar/${hash}`;
+    return photoURL;
+}
+
+// config.js
+export const url = 'http://wesbos.com';
+```
