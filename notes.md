@@ -2667,3 +2667,145 @@ export function gravatar(email) {
 // config.js
 export const url = 'http://wesbos.com';
 ```
+
+# Module #14 ES6 Tooling
+## Tool-Free Modules with SystemJS (+bonus BrowserSync setup)
+- SystemJS, Browserify, Rollup also bundle ES6 module
+- Doesn't matter which you use and Wes recommends Webpack
+- JSPM sits on top of NPM, not an alternative
+
+### SystemJS
+- SystemJS runs in the browser with a script in html
+- Don't need any of the overheader for bundlers, compilers, and compilers
+- It's great for testing but you would not want to use in production
+- Need to run the HTML through a server
+```js
+<script src="https://jspm.io/sysem@0.19.js">
+```
+
+### Install browser-sync
+- Helps update HTML preview live
+- Install with: 
+```
+sudo npm install browser-sync --save-dev
+```
+- Add script to package.json: 
+```
+"server": "browser-sync start --directory --server --files '*.js, *.html, *.css'"
+```
+- Add script to index.html:
+```
+<script>
+    System.config({ transpiler: 'babel'});
+    System.import('./main.js');
+</script>
+```
+
+### Installing lodash with SystemJS
+- SystemJS can install from NPM without having to run commands
+- Add import statement in main.js:
+```
+import { sum, kebabCase } from 'npm:lodash';
+```
+
+- Tax example:
+```js
+// main.js
+import { addTax} from './checkout';
+
+console.log(addTax(100, 0.15));
+
+// checkout.js
+export function addTax(amount, taxRate) {
+    return amount + (amount * taxRate);
+}
+```
+
+## All About Babel + npm scripts
+- ES6 use is possible to use today with support of Babel and polyfilling
+- Babel is a JavaScript compiler
+- Converts ES6 to ES5 and also experimental features
+- You can try to [Babel REPL](https://babeljs.io/repl/) to try it out
+- You only need to use Webpack, Browserify with Babel if you're using modules
+- Otherwise you won't need it.
+1. Make a babel directory
+2. Do a git init
+3. Install babel with npm
+- Use next if you want to do the experimental version
+```
+npm install babel-cli@next
+```
+4. Add script to package.json
+```
+"scripts": {
+    "babel": "babel app.js --watch --out-file app-compiled.js"
+  }
+```
+
+### No further need for a Babel Preset, introduce babel-preset-env
+- Presets are a bundle of plugins
+- Preset for ES6 was necessary but browsers now are being updated
+- Perhaps you only want to update the certain features
+- You can use [babel-preset-env](https://github.com/babel/babel/tree/master/experimental/babel-preset-env)
+- After selecting the browser, it will tell you what you need to compile down to ES5
+1. Install with
+```
+npm install babel-preset-env@next
+```
+2. Put settings in package.json instead of a .babelrc file
+- This is the same as putting in babelrc
+- SIDENOTE: there's a babel-preset-react package as well
+```
+"babel" : {
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ]
+}
+```
+3. Run babel with:
+```
+npm run babel
+```
+
+### Experimental plugins
+- Object-rest-spread was an experimental feature
+```js
+let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
+```
+- So we need to install a plugin
+1. Install via npm:
+```
+npm install --save-dev babel-plugin-transform-object-rest-spread
+```
+2. Add to babelrc or package.json
+- Note that it's not a preset, so put it outside of that array
+```
+"plugins": ["transform-object-rest-spread"]
+```
+
+## Polyfilling ES6 for Older Browsers
+- Babel works only syntax but we still need polyfilling
+- Methods like Array.from() for ES6, Babel assumes all browsers have this method (not true)
+- We have to polyfill to create this method with vanilla javascript
+- There are polyfill sections on MDN
+- Two major polyfills:
+1. Babel Polyfill
+- Only if you need modules or polyfilling a lot
+- Uses corejs
+```
+import "babel-polyfill";
+```
+
+2. Polyfill.io
+- Visit [site](https://polyfill.io/v2/docs/)
+- More lightweight and detects user's browser
+- It dynamically generates a JS file for the user
+- You can also tailor your response with options
+- Install with:
+```
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js></script>
+```
