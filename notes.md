@@ -2809,3 +2809,303 @@ import "babel-polyfill";
 ```
 <script src="https://cdn.polyfill.io/v2/polyfill.min.js></script>
 ```
+
+# Module #15 Classes
+## Prototypal Inheritance Review
+- A constructor function always has capital letter
+- Prototypal inheritance is when you put a method on the original constructor function and it will be available for all subsequent objects that you make
+- See how the bark and cuddle methods are available to both instances of snickers and sunny
+- This is because it is added onto the constructor function and not with each instance
+- Think of it like adding something on an original blueprint
+```js
+function Dog(name, breed) {
+    this.name = name;
+    this.breed = breed;
+}
+
+Dog.prototype.bark = function() {
+    console.log(`Bark bark! My name is ${this.name}`)
+}
+
+const snickers = new Dog('Snickers', 'King Charles');
+const sunny = new Dog('Sunny', 'Golden Doodle');
+
+Dog.prototype.bark = function() {
+    console.log(`Bark bark! My name is ${this.name} and I'm ${this.breed}`);
+}
+
+Dog.prototype.cuddle = function() {
+    console.log(`I love you owner!`);
+}
+```
+
+## Say Hello to Classes
+- We will convert the previous constructor function to ES6 classes now
+- Our old syntax:
+```js
+function Dog(name, breed) {
+    this.name = name;
+    this.breed = breed;
+}
+
+Dog.prototype.bark = function() {
+    console.log(`Bark bark! My name is ${this.name}`)
+}
+
+const snickers = new Dog('Snickers', 'King Charles');
+const sunny = new Dog('Sunny', 'Golden Doodle');
+
+Dog.prototype.bark = function() {
+    console.log(`Bark bark! My name is ${this.name} and I'm ${this.breed}`);
+}
+
+Dog.prototype.cuddle = function() {
+    console.log(`I love you owner!`);
+}
+```
+- However there are 2 types of classes: class declaration and class expression
+```js
+// Class declaration
+class Dog {
+    
+    }
+
+// Class expression
+const Dog = class {
+
+    }
+```
+- To new ES6 class:
+- Remember that all the methods inside of a class only need the shorthand
+- It's like the methods that we put inside of an object
+- Notice we do not have have a comma after the constructor method
+```
+constructor() versus constructor: function() {}
+```
+```js
+class Dog {
+    constructor(name, breed) {
+        this.name = name;
+        this.breed = breed;
+    }
+    bark() {
+        console.log(`Bark bark! My name is ${this.name}`)
+    }
+    cuddle() {
+        console.log(`I love you owner!`);
+    }
+}
+
+const snickers = new Dog('Snickers', 'King Charles');
+const sunny = new Dog('Sunny', 'Golden Doodle');
+
+snickers;
+sunny;
+snickers.bark();
+sunny.bark();
+```
+
+### Static methods
+- Remember when we used Array.from() or Array.of()
+- It was not a method avaiable for all arrays, only on Array directly
+- We can add the same idea to our code with keyword "static"
+- You can only call on the constructor array but not on the objects
+```js
+class Dog {
+    constructor(name, breed) {
+        this.name = name;
+        this.breed = breed;
+    }
+    bark() {
+        console.log(`Bark bark! My name is ${this.name}`)
+    }
+    cuddle() {
+        console.log(`I love you owner!`);
+    }
+    static info() {
+        console.log('A dog is better than a cat by 10 times'); 
+    }
+}
+
+const snickers = new Dog('Snickers', 'King Charles');
+const sunny = new Dog('Sunny', 'Golden Doodle');
+
+sunny.info(); // Will not work
+Dog.info(); // Will work
+```
+
+### Getters
+```js
+class Dog {
+    constructor(name, breed) {
+        this.name = name;
+        this.breed = breed;
+    }
+    bark() {
+        console.log(`Bark bark! My name is ${this.name}`)
+    }
+    cuddle() {
+        console.log(`I love you owner!`);
+    }
+    static info() {
+        console.log('A dog is better than a cat by 10 times'); 
+    }
+    get description() {
+        return `${this.name} is a ${this.breed} type of dog`;
+    })
+}
+
+snickers.description // Will work
+```
+
+### Setters and Getters
+- A setter is basically setting up how a value would be returned
+- A getter is the value that will return when you call that setter
+- Read this [article](https://javascriptplayground.com/blog/2013/12/es5-getters-setters/)
+```js
+class Dog {
+    constructor(name, breed) {
+        this.name = name;
+        this.breed = breed;
+    }
+    bark() {
+        console.log(`Bark bark! My name is ${this.name}`)
+    }
+    cuddle() {
+        console.log(`I love you owner!`);
+    }
+    static info() {
+        console.log('A dog is better than a cat by 10 times'); 
+    }
+    get description() {
+        return `${this.name} is a ${this.breed} type of dog`;
+    })
+    set nicknames(value) {
+        this.nick = value.trim();
+    }
+}
+
+snickers.nicknames = ` snicky `; // Will work, " snicky "
+snickers.nicknames; // does not work, needs a getter
+
+// Add a getter
+get nicknames() {
+    return this.nick;
+}
+```
+
+## Extending Classes and using super()
+- You can also extend a class 
+- Take the animal class and we add on rhino and dog
+- When we add dog, he also barks
+```js
+class Animal {
+    constructor(name) {
+        this.name = name;
+        this.thirst = 100;
+        this.tbelly = [];
+    }
+    drink() {
+        this.thirst -= 10;
+        return this.thirst;
+    }
+    eat(food) {
+        this.belly.push(food);
+        return this.belly;
+    }
+}
+
+const rhino = new Animal("Rhiney");
+
+rhino;
+rhino.eat('burger');
+rhino.eat('leaves');
+rhino.eat('zebra');
+rhino.drink();
+```
+- Now we extend Animal to Dog
+- But you will get an error because Dog is just extending Animal
+```js
+const snickers = new Dog ('Snickers', 'King Charles');
+class Dog extends Animal {
+    constructor(name, breed) {
+        super()
+        this.name = name;
+        this.breed = breed;
+    }
+}
+```
+- You need to make an Animal before you make the Dog 
+- We use super() for that
+- It calls on the original item that we are extending
+- We do not need to set the name since it's already on the original constructor
+- But we do have to add the breed
+```js
+const snickers = new Dog ('Snickers', 'King Charles');
+class Dog extends Animal {
+    constructor(name, breed) {
+        super(name)
+        this.breed = breed;
+    }
+}
+```
+- Now we also add bark() on the class:
+```js
+const snickers = new Dog ('Snickers', 'King Charles');
+class Dog extends Animal {
+    constructor(name, breed) {
+        super()
+        this.name = name;
+        this.breed = breed;
+    }
+    bark() {
+        console.log('Bark I\'m a dog!');
+    }
+}
+```
+- A good rule is not to extend beyond 2 or 3
+
+## Extending Arrays with Classes for Custom Collections
+- How do we extend array methods to our new classes?
+- We first extend it and then call super() to construct the object
+```js
+class MovieCollection extends Array {
+    constructor(name, ...items) {
+        super(...items);
+        this.name = name;
+    }
+}
+
+const movies = new MovieCollection('Wes\'s Fav Movies',
+{ name: 'Bee Movie', stars: 10 },
+{ name: 'Star Wars Trek', stars: 1 },
+{ name: 'Virgin Suicides', stars: 7 },
+{ name: 'King of the Road', stars: 8 }
+);
+```
+- We also add methods:
+```js
+class MovieCollection extends Array {
+    constructor(name, ...items) {
+        super(...items);
+        this.name = name;
+    }
+    add(movie) {
+        this.push(movie);
+    }
+    topRate(limit = 10) {
+        return this.sort((a,b) => (a.stars > b.stars ? -1 :1).slice(0, limit); 
+    }
+}
+
+const movies = new MovieCollection('Wes\'s Fav Movies',
+{ name: 'Bee Movie', stars: 10 },
+{ name: 'Star Wars Trek', stars: 1 },
+{ name: 'Virgin Suicides', stars: 7 },
+{ name: 'King of the Road', stars: 8 }
+);
+
+movies.add({ name: 'Titanic', stars: 5 })
+console.table(movies.topRated());
+console.table(movies.topRaded(2));
+```
