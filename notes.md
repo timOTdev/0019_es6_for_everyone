@@ -3109,3 +3109,122 @@ movies.add({ name: 'Titanic', stars: 5 })
 console.table(movies.topRated());
 console.table(movies.topRaded(2));
 ```
+
+# Generators
+## Introducing Generators
+- Generators allows you to pause/stop a function 
+- You use `*` after the function keyword and `yield` IE `function* sayHi()`
+- You can also put the `*` in front of the function name IE `function *sayHi()`
+- `yield` is like a return for now
+- It will return that one item until it is called again
+- Use .next() to advance through generator
+```js
+function* listPeople() {
+    yield 'Wes';
+    yield 'Kait';
+    yield 'Snickers';
+}
+
+const people = listPeople();
+
+people; // Returns the generator
+people.next(); // Object {value: "Wes", done: false}
+people.next(); // Object {value: "Kait", done: false}
+people.next(); // Object {value: "Snicker", done: false}
+people.next(); // Object {value: undefined, done: true}
+```
+- You can also use with dynamic variables
+```js
+function* listNumber() {
+    let i = 0;
+    yield i;
+    i++;
+    yield i;
+    i++;
+    yield i;
+}
+
+const number = listNumber();
+
+number.next(); // Object {value: 0, done: false}
+number.next(); // Object {value: 1, done: false}
+number.next(); // Object {value: 2, done: false}
+number.next(); // Object {value: undefined, done: true}
+```
+
+### Iterating through an array with a generator
+- Inventor example:
+- We are looping through an array with a generator
+- The values will return under value when you call .next()
+- TIP: you can tack on the .value() if you don't care about the done value
+```js
+const inventors = [
+{ first: 'Albert', last: 'Einstein', year: 1879 },
+{ first: 'Isaac', last: 'Newton', year: 1643 },
+{ first: 'Galileo', last: 'Galilei', year: 1564 },
+{ first: 'Marie', last: 'Curie', year: 1867 },
+{ first: 'Johannes', last: 'Kepler', year: 1571 },
+{ first: 'Nicolaus', last: 'Copernicus', year: 1473 },
+{ first: 'Max', last: 'Planck', year: 1858 },
+];
+
+function* loop(arr) {
+    console.log(inventors);
+    for (const item of arr) {
+        yield item;
+    }
+})
+
+const inventoryGen = loop(inventors);
+
+// You have to call .next() for it to show in console
+inventorGen.next(); // Returns array of objects, Object {value: Object, done: false}
+```
+
+## Using Generators for Ajax Flow Control
+- Generators can do waterfall-like AJAX requests
+- Waterfalls create callback hell and hard to deal with
+- Browsers are getting better with dealing with this
+- Assume these calls rely on each other and needs waterfall
+- After the call is complete, the data is stored back into that variable
+```js
+function ajax(url) {
+    fetch(url).then(data => data.json()).then(data => dataGen.next(data))
+}
+function* steps() {
+console.log('fetching beers');
+const beers = yield ajax('http://api.react.beer/v2/search?q=hops&type=beer');
+console.log(beers);
+
+console.log('fetching wes');
+const wes = yield ajax('https://api.github.com/users/');
+console.log(wes);
+
+console.log('fetching fat joe');
+const fatJoe = yield ajax('https://api.discogs.com/artists/51988');
+console.log(fatJoe);
+}
+
+const dataGen = steps();
+dataGen.next(); // To initialize generator
+```
+
+## Looping Generators with for of
+- Now we want to loop through a generator all at once
+- There are no pauses and you don't have to keep running .next()
+```js
+function* lyrics() {
+    yield `But don't tell my heart`;
+    yield `My achy breaky heart`;
+    yield `I just don't think he'd understand`;
+    yield `And if you tell my heart`;
+    yield `My achy breaky heart`;
+    yield `He might blow up and kill this man`;
+}
+
+const achy = lyrics();
+
+for (const line of achy) {
+    console.log(line);
+}
+```
