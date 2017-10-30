@@ -3228,3 +3228,120 @@ for (const line of achy) {
     console.log(line);
 }
 ```
+
+# Module #17 Proxies
+## What are Proxies?
+- Proxies allows modificaiton the default operations of objects
+- You can override properties like set, get
+- We use this with `new Proxy(target, handler object)`
+- We set "traps" in a handler to handle the data being passed in
+- Check [MDN Handlers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler) for more traps
+```js
+const person = { name: 'Wes', age: 100 };
+const personProxy = new Proxy(person, {
+    get(target, name) {
+        console.log('Someone is asking for ', target, name);
+        return 'Nahhhh';
+        // or you can return:
+        return target[name].toUpperCase();
+    }
+})
+
+personProxy.name = 'Wesley';
+personProxy; // Proxy {name: "Wesley", age: 100}
+personProxy.name; // Someone is asking for Object {name: "Wesley", age: 100} name
+personProxy.name; // With the added return, it will return "Nahhhh" now
+```
+- Now we are going to use set:
+- Trim() basically takes away the spaces
+- If you do not set a parameter for a trap, the defaults will apply
+```js
+const person = { name: 'Wes', age: 100 };
+const personProxy = new Proxy(person, {
+    get(target, name) {
+        console.log('Someone is asking for ', target, name);
+        return 'Nahhhh';
+        // or you can return:
+        return target[name].toUpperCase();
+    },
+    set(target, name, value) {
+        if(typeof value === 'string') {
+            target[name] = value.trim().toUpperCase();
+        }
+    }
+})
+
+personProxy.cool = "   ohhh yeah   ";
+personProxy; // Proxy {name: "Wesley", age: 100, cool: "ohhh yeah"}
+personProxy.wes = "I love wes   ";
+personProxy.wes = "I LOVE WES";
+```
+
+## Another Proxy Example
+- Phone numbers are difficult to deal with
+- These would be US numbers
+```js
+const phoneHandler = {
+    set(target, name, value) {
+        target[name] = value.match(/[0-9]/g).join('');
+    },
+    get(target, name) {
+        return target[name].replace(/(\d{3})(\d{3})(\d{4})/, '($1)-$2-$3');
+    }
+}
+
+const phoneNumbers = new Proxy({}, phoneHandler);
+
+// Before set
+phoneNumbers.home = '+234 -234-2343'; // "+234 -234-2343"
+phoneNumbers.work = '234 234 2343'; // "234 234 2343"
+phoneNumbers; // Proxy {home: "+234 -234-2343", work: "234 234 2343"}
+
+// After set
+phoneNumbers.work = '234 234 2343'; // "234 234 2343"
+phoneNumbers.work; // "2342342343"
+phoneNumbers.home = '+234 -234-2343'; // "+234 -234-2343"
+phoneNumbers.home; // "2342342343"
+
+// After get
+phoneNumbers.work = '234 234 2343'; // "234 234 2343"
+phoneNumbers.work; // "(234)-234-2343"
+phoneNumbers.cell = '1231231234'; 
+phoneNumbers.cell; // "(123)-123-1234"
+```
+
+## Using Proxies to combat silly errors
+- When you are building libraries, you want to make it easy for other developers
+- Here are some common casses with map coordinates or people properties:
+```js
+const map = {};
+map.logitiude = 79.3423; // spell wrong
+map.longitude = 79.3423; // full spelling
+map.long = 79.3423; // wrong key
+map.lon = 79.3423; // nope
+map.lng = 79.3423; // Got it!
+
+const person = { name: 'Wes' };
+person.ID = 123; // no
+person.iD = 123; // no
+person.id = 123; // yes
+```
+- So now we will construct a safety proxy:
+```js
+const safeHandler = {
+    set(target, name, value) {
+        const likeKey = Object.keys(target).find(k => k.toLowerCase() === name.toLowerCase());
+
+        if(!(name in target)) && likeKey) {
+            throw new Error(`Oops! Looks like like we already have a(n) ${name} property but with the case of ${likeKey}.`)
+        }
+        target[name] = value;
+    }
+}
+
+const safety = new Proxy({ id: 100}, safeHandler);
+
+safetyID = 200; // Does not work
+safety.name = 'wes'; // Will work
+safety.Name = 'wesley'; // Does not work
+```
