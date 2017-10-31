@@ -3231,9 +3231,9 @@ for (const line of achy) {
 
 # Module #17 Proxies
 ## What are Proxies?
-- Proxies allows modificaiton the default operations of objects
+- Proxies allows modification the default operations of objects
 - You can override properties like set, get
-- We use this with `new Proxy(target, handler object)`
+- We use this with `new Proxy(target, handlerObject)`
 - We set "traps" in a handler to handle the data being passed in
 - Check [MDN Handlers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/handler) for more traps
 ```js
@@ -3344,4 +3344,131 @@ const safety = new Proxy({ id: 100}, safeHandler);
 safetyID = 200; // Does not work
 safety.name = 'wes'; // Will work
 safety.Name = 'wesley'; // Does not work
+```
+
+# Module #18 Sets and WeakSets
+## Sets
+- A set is like a unique array that you can only add an item once
+- It has useful methods to manage the set also
+- It is not index-based and can't access items individually
+- Use `new Set()` to initate
+- Use .add() to add to the set
+- Use .delete() to delete the set
+. Use .clear() to clear the set
+- Use .size() to see the amount of people
+```js
+const people = new Set();
+people.add('Wes');
+people.add('Snickers');
+people.add('Kait');
+
+people.size;
+people.delete('Wes');
+people.clear();
+```
+- Use .values() or .keys() to see the items
+- Use .entries() to see items as key/value pairs
+- You can use generator .next() or ForOf loops
+-
+```js
+people.values(); 
+
+const it = people.values();
+it.next();
+
+for (const person of people) {
+    console.log(person);
+}
+```
+- Students example:
+- Can define the set as you're defining it or from an array variable
+- Use .has() to see if it contains an item
+- It will not add an item twice
+- Can not use index to access it
+```js
+const student = new set(['Wes', 'Kara', 'Tony']);
+
+const dogs = ['Snickers', 'Sunny'];
+const dogSet = new Set(dogs);
+
+dogSet; // Set{"Snickers", "Sunny"}
+students; // Set{"Wes", "Kara", "Tony"}
+student.has('Tony'); // True
+student.has('Wesssss'); // False
+students.has('Wes'); // Will not add it twice
+students[1]; // Will not work
+```
+
+## Understanding Sets with Brunch
+- Understanding with a brunch example
+- Brunch is like the master list
+- Line is the list that is self-managing
+- Notice we add Heather and Snickers later to the set
+- The iterator will still pass over it
+```js
+const brunch = new Set();
+
+// as people start coming in
+brunch.add('Wes');
+brunch.add('Sarah');
+brunch.add('Simone');
+
+// ready to open!
+const line = brunch.values();
+console.log(line.next().value); // Wes
+console.log(line.next().value); // Sarah
+brunch; // Set {"Wes", "Sarah", "Simone"}
+line; // SetIterator {"Simone"}
+
+brunch.add('Heather');
+brunch.add('Snickers');
+console.log(line.next().value); // Simone
+console.log(line.next().value); // Heather
+console.log(line.next().value); // Snickers
+```
+## WeakSets 
+- Like a set with some limitations
+1. Can only contain objects
+2. You cannot loop over weaksets
+3. There is no .clear() method
+    - There's a garbage collection method
+    - If code is deleted, it will be removed from memory
+- Create with `new WeakSet()`
+- Add with `.add()`
+```js
+let dog1 = { name: 'Snickers', age: 3 };
+let dog2 = { name: 'Sunny', age: 1 };
+
+const weakSauce = new WeakSet([dog1, dog2]);
+weakSauce.add(dog2);
+
+weakSauce; // WeakSet {Object { name: 'Snickers', age: 3 }, Object { name: 'Sunny', age: 1 }}
+weakSauce.has(dog1); // True
+weakSauce.has(dog2); // True
+
+// Will not work because we can't enumerate over a weakset
+for (const dog of weakSauce) {
+    console.log(dog);
+}
+```
+
+### Garbage Collection with WeakSets
+- No way to force the garbage collection process, depends on browsers, etc.
+- You might experience a memory leak since it takes a couple seconds to delete variable
+- If variables are not declared or defined null, it will be removed
+- Helps prevent memory leaks since it self-manages
+```js
+let dog1 = { name: 'Snickers', age: 3 };
+let dog2 = { name: 'Sunny', age: 1 };
+
+const weakSauce = new WeakSet([dog1, dog2]);
+
+// Why does Snickers still appear?
+console.log(weakSauce); // WeakSet {Object { name: 'Snickers', age: 3 }, Object { name: 'Sunny', age: 1 }}
+dog1 = null;
+console.log(weakSauce); // WeakSet {Object { name: 'Snickers', age: 3 }, Object { name: 'Sunny', age: 1 }}
+
+// It takes time to dissapear
+// After 3 seconds or so...
+console.log(weakSauce); // WeakSet {Object { name: 'Sunny', age: 1 }}
 ```
