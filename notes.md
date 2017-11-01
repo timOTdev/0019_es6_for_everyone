@@ -3350,7 +3350,6 @@ safety.Name = 'wesley'; // Does not work
 ## Sets
 - A set is like a unique array that you can only add an item once
 - It has useful methods to manage the set also
-- It is not index-based and can't access items individually
 - Use `new Set()` to initate
 - Use .add() to add to the set
 - Use .delete() to delete the set
@@ -3362,14 +3361,14 @@ people.add('Wes');
 people.add('Snickers');
 people.add('Kait');
 
-people.size;
-people.delete('Wes');
-people.clear();
+people.size; // 3
+people.delete('Wes'); // true, Set(2) {"Snickers", "Kait"}
+people.clear(); // undefined
 ```
 - Use .values() or .keys() to see the items
 - Use .entries() to see items as key/value pairs
+- It is not index-based and can't access items individually
 - You can use generator .next() or ForOf loops
--
 ```js
 people.values(); 
 
@@ -3391,10 +3390,10 @@ const student = new set(['Wes', 'Kara', 'Tony']);
 const dogs = ['Snickers', 'Sunny'];
 const dogSet = new Set(dogs);
 
-dogSet; // Set{"Snickers", "Sunny"}
-students; // Set{"Wes", "Kara", "Tony"}
-student.has('Tony'); // True
-student.has('Wesssss'); // False
+dogSet; // Set {"Snickers", "Sunny"}
+students; // Set {"Wes", "Kara", "Tony"}
+student.has('Tony'); // true
+student.has('Wesssss'); // false
 students.has('Wes'); // Will not add it twice
 students[1]; // Will not work
 ```
@@ -3402,9 +3401,10 @@ students[1]; // Will not work
 ## Understanding Sets with Brunch
 - Understanding with a brunch example
 - Brunch is like the master list
-- Line is the list that is self-managing
+- Line is a secondary list that is self-managing
 - Notice we add Heather and Snickers later to the set
 - The iterator will still pass over it
+- When .add() to brunch, it automatically gets push to line also (pretty cool!)
 ```js
 const brunch = new Set();
 
@@ -3426,6 +3426,7 @@ console.log(line.next().value); // Simone
 console.log(line.next().value); // Heather
 console.log(line.next().value); // Snickers
 ```
+
 ## WeakSets 
 - Like a set with some limitations
 1. Can only contain objects
@@ -3443,8 +3444,8 @@ const weakSauce = new WeakSet([dog1, dog2]);
 weakSauce.add(dog2);
 
 weakSauce; // WeakSet {Object { name: 'Snickers', age: 3 }, Object { name: 'Sunny', age: 1 }}
-weakSauce.has(dog1); // True
-weakSauce.has(dog2); // True
+weakSauce.has(dog1); // true
+weakSauce.has(dog2); // true
 
 // Will not work because we can't enumerate over a weakset
 for (const dog of weakSauce) {
@@ -3471,4 +3472,117 @@ console.log(weakSauce); // WeakSet {Object { name: 'Snickers', age: 3 }, Object 
 // It takes time to dissapear
 // After 3 seconds or so...
 console.log(weakSauce); // WeakSet {Object { name: 'Sunny', age: 1 }}
+```
+
+# Module #19 Map and Weak Map
+## Maps
+- Maps works on objects
+- Works similar for sets to arrays
+- Except it has keys and values
+- Initiate with `new Map()`
+- Add entries with `.set()`
+- Search with `.has()`
+- Get values with `.get()`
+- Delete entries with `.delete()`
+```js
+const dogs = new Map();
+
+dogs.set('Snickers', 3);
+dogs.set('Sunny', 2);
+dogs.set('Hugo', 10);
+
+dogs.has('Snickers'); // true
+dogs.get('Snickers'); // 3
+dogs.delete('Hugo'); // true
+dogs; // Map {"Snickers" => 3, "Sunny" => 2}
+```
+
+### Looping over Maps
+- Can use forEach or forOf
+- With forEach:
+```js
+dogs.forEach((val, key) => console.log(val, key));
+
+// Returns
+// 3 "Snickers"
+// 2 "Sunny"
+// 10 "Hugo"
+```
+- With forOf:
+- Returns arrays so we can actually deconstruct:
+```js
+for (const dog of dogs) {
+    console.log(dog);
+}
+
+// Returns
+// ["Snickers", 3];
+// ["Sunny", 2];
+// ["Hugo", 10];
+```
+- To deconstruct:
+```js
+for (const [key, val] of dogs) {
+    console.log(key, val);
+}
+
+// Returns
+// Snickers 3
+// Sunny 2
+// Hugo 10
+```
+
+## Map Metadata with DOM Node Keys
+- Sometimes we don't want metadata on our object, just about the object
+- So we can create a metadata Map to hold this information
+- Like how many times we click each button
+- We want to use an object as the key
+```js
+<button>Snakes 🐍</button>
+<button>Cry 😂</button>
+<button>Ice Cream 🍦</button>
+<button>Flamin' 🔥</button>
+<button>Dancer 💃</button>
+
+const clickCounts = new Map();
+const buttons = document.querySelectorAll('button');
+
+buttons.forEach(button => {
+    clickCounts.set(button, 0);
+    button.addEventListener('click', function() {
+        const val = clickCounts.get(this);
+        clickCounts.set(this, val + 1);
+        console.log(clickCounts);
+    })
+})
+
+clickCount; // Returns a map
+```
+
+## WeakMap and Garbage Collection
+- WeakMap is similar as WeakSet
+- Can't tell the size on it
+- You can't loop over it
+- Items will get garbage collected if not exists in your file
+- WeakMap doesn't have a size
+```js
+let dog1 = { name: 'Snickers' };
+let dog2 = { name: 'Sunny' };
+
+const strong = new Map();
+const weak = new WeakMap();
+
+strong.set(dog1, 'Snickers is the best!');
+weak.set(dog2, 'Sunny is the 2nd best!');
+
+strong; // Map
+weak; // WeakMap
+weak.size; // undefined
+strong.size; // 1
+
+// Let's delete variables
+dog1 = null;
+dog2 = null;
+strong; // Map
+weak; // WeakMap
 ```
