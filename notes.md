@@ -3474,16 +3474,17 @@ console.log(weakSauce); // WeakSet {Object { name: 'Snickers', age: 3 }, Object 
 console.log(weakSauce); // WeakSet {Object { name: 'Sunny', age: 1 }}
 ```
 
-# Module #19 Map and Weak Map
+# Module #19 Map and WeakMap
 ## Maps
 - Maps works on objects
-- Works similar for sets to arrays
-- Except it has keys and values
+- Works similar like sets to arrays except it has keys and values
 - Initiate with `new Map()`
 - Add entries with `.set()`
 - Search with `.has()`
 - Get values with `.get()`
+- Map size with `.size()`
 - Delete entries with `.delete()`
+- More at [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
 ```js
 const dogs = new Map();
 
@@ -3585,4 +3586,393 @@ dog1 = null;
 dog2 = null;
 strong; // Map
 weak; // WeakMap
+```
+
+# Module #2 Async + Await Flow Control
+## Async Await - Native Promises Review
+- Review for promises
+- Newer browsers are promise-based and don't have to define success and error anymore
+- We just have to define .then() and .catch()
+- There are 2 built-in promises API: fetch API and navigator API
+- We are using fetch API now
+```js
+fetch('https://api.github.com/users/wesbos') // Returns a promise
+.then(res => return res.json()) // Fetch does not assume JSON
+.then(res => console.log(res))
+.catch(err => {
+    console.error('OH NO!!!');
+    console.error(err);
+})
+```
+
+### Get user media with navigator API: webcam
+- We are now working with webcam
+- Add a video element `<video controls class="handsome"></video>`
+- Then in JS:
+```js
+const video = document.querySelector('.handsome');
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(mediaSream => {
+    video.srcObject = mediaStream;
+    video.load();
+    video.play();
+})
+.catch(err => console.log(err));
+
+// An alternative to video.srcObject
+// video.src = window.URL.createObjectURL(mediaStream);
+```
+
+## Async Await - Custom Promises Review
+- Anything that returns promises has built-in APIs which we can use .then()/.catch() or async/await
+- Doing callbacks inside callbacks is inefficient
+```js
+// Nested callbacks
+breathe(1000, function() {
+    breathe(2000, function() {
+        breathe(4000, function() {
+
+        })
+    })
+})
+```
+- Async/await can handle the same problem much better
+```js
+function breathe(amount) {
+    return new Promise((resolve,reject) => {
+        setTimeout(() => resolve('Done for ${amount} ms!'), amount);
+    })
+}
+
+breathe(1000)
+.then(res => {
+    console.log(res);
+    return breathe(500);
+}).then(res => {
+    console.log(res);
+    return breathe(600);
+}).then(res => {
+    console.log(res);
+    return breathe(200);
+}).then(res => {
+    console.log(res);
+    return breathe(500);
+}).then(res => {
+    console.log(res);
+    return breathe(2000);
+}).then(res => {
+    console.log(res);
+    return breathe(250);
+}).then(res => {
+    console.log(res);
+    return breathe(300);
+}).then(res => {
+    console.log(res);
+    return breathe(600);
+})
+```
+- Then we want to reject is ms is less than 500
+- We want to catch errors also
+```js
+function breathe(amount) {
+    return new Promise((resolve,reject) => {
+        if (amount < 500) {
+            reject('That is too small of a value');
+        }
+        setTimeout(() => resolve('Done for ${amount} ms!'), amount);
+    })
+}
+
+breathe(1000)
+.then(res => {
+    console.log(res);
+    return breathe(500);
+}).then(res => {
+    console.log(res);
+    return breathe(600);
+}).then(res => {
+    console.log(res);
+    return breathe(200);
+}).then(res => {
+    console.log(res);
+    return breathe(500);
+}).then(res => {
+    console.log(res);
+    return breathe(2000);
+}).then(res => {
+    console.log(res);
+    return breathe(250);
+}).then(res => {
+    console.log(res);
+    return breathe(300);
+}).then(res => {
+    console.log(res);
+    return breathe(600);
+}).catch(err => {
+    console.error(err);
+    console.error('You screwed up!');
+})        
+```
+
+## All About Async + Await
+- In the previous lesson, it was still messy
+- Now we will convert it to async/await
+- Asynchronous means you start the task and immediately move on to next task
+- Things like alert() and prompt() will block tasks
+- Console.log() will just interject but doesn't block
+```js
+// This returns a promise so it is not blocking
+const res = fetch('https://github.com');
+console.log(res);
+
+// This will block the date from running
+alert('hi'); 
+setInterval(() => console.log(Date.now()), 500)
+```
+- Await means we want a response to come back before starting the next function
+- Async/await is inherently built in promises, it is not an alternative
+- You need to put await inside of an async function, or else it won't work (top-level await)
+- To initiate:
+```js
+// Method 1
+const go = async () => {
+
+}
+
+// Method 2
+async function go() {
+
+}
+```
+- Now we use the breathe function again
+```js
+function breathe(amount) {
+    return new Promise((resolve,reject) => {
+        if (amount < 500) {
+            reject('That is too small of a value');
+        }
+        setTimeout(() => resolve('Done for ${amount} ms!'), amount);
+    })
+}
+
+async function go() {
+    console.log('start');
+    const res = await breathe(1000);
+    console.log(res);
+    const res2 = await breathe(600);
+    console.log(res2);
+    const res3 = await breathe(750);
+    console.log(res3);
+    const res4 = await breathe(900);
+    console.log(res4);
+    console.log('end');
+}
+
+go();
+```
+
+## Async + Await Error Handling
+- In the previous lesson, if the value is less 300ms, we didn't catch the error
+- Now we learn about error handling
+- Initiate with a `try {}` and `catch(err) {}` block
+- This is method 1:
+```js
+function breathe(amount) {
+    return new Promise((resolve,reject) => {
+        if (amount < 500) {
+            reject('That is too small of a value');
+        }
+        setTimeout(() => resolve('Done for ${amount} ms!'), amount);
+    })
+}
+
+async function go() {
+    try {        
+        console.log('start');
+        const res = await breathe(1000);
+        console.log(res);
+        const res2 = await breathe(600);
+        console.log(res2);
+        const res3 = await breathe(750);
+        console.log(res3);
+        const res4 = await breathe(900);
+        console.log(res4);
+        console.log('end');
+    } catch (err) {
+        console.error('Ohhh noo!!!');
+        console.error(err);
+    }
+}
+
+go();
+```
+
+### Using high-order function
+- This was use in node.js
+- Problem was it was difficult for 30 or more pages
+- You would have to repeat the same code
+- This is an example of where it was discovered:
+```js
+const userPage = router.get('/user', async (req, res, next) => {
+    try {
+        const users = await User.find(); // 10 users
+    } catch(e) {
+        res.render('error')
+    }
+})
+```
+- We can use an umbrella function to achieve a solution
+- Higher order function takes in another function and returns a modified
+```js
+function catchErrors(fn) {
+    return function() {
+        return fn().catch((err) => {
+            console.error('Ohh nooo!!');
+            console.error(err);
+        });
+    }
+}
+
+async function go() {
+        console.log('start');
+        const res = await breathe(1000);
+        console.log(res);
+        const res2 = await breathe(600);
+        console.log(res2);
+        const res3 = await breathe(750);
+        console.log(res3);
+        const res4 = await breathe(900);
+        console.log(res4);
+        console.log('end');
+    } 
+}
+
+const wrappedFunction = catchErrors(go);
+
+wrappedFunction();
+```
+- We can also do a spread on argments
+```js
+function catchErrors(fn) {
+    return function(...args) {
+        return fn(...args).catch((err) => {
+            console.error('Ohh nooo!!');
+            console.error(err);
+        });
+    }
+}
+
+async function go(name, last) {
+        console.log(`Starting for ${name} ${last}`);
+        const res = await breathe(1000);
+        console.log(res);
+        const res2 = await breathe(600);
+        console.log(res2);
+        const res3 = await breathe(750);
+        console.log(res3);
+        const res4 = await breathe(900);
+        console.log(res4);
+        console.log('end');
+    } 
+}
+
+const wrappedFunction = catchErrors(go);
+
+wrappedFunction('Wes', 'Bos');
+```
+
+## Waiting on Multiple Promises
+- Be careful when running multiple promises
+- We often want to fire off multiple fetch and wait for results
+- We can put await on each variable but it will be coming back at different times
+- What if we want to wait until all of them come back?
+- We can initiate with a `Promise.all`
+- We can get data back by
+1. Adding on .then()
+```js
+async function go() {
+    const p1 = fetch('https:/api.github.com/users/wesbos').then(r => r.json();
+    const p2 = fetch('https://api.github.com/users/stolinski').then(r => r.json());
+    // Wait for both of them to come back
+    const res = await Promise.all([p1, p2]);
+    
+}
+```
+2. Map over the array of promises
+```js
+async function go() {
+    const p1 = fetch('https:/api.github.com/users/wesbos');
+    const p2 = fetch('https://api.github.com/users/stolinski');
+    // Wait for both of them to come back
+    const res = await Promise.all([p1, p2]);
+    const dataPromises = res.map(r => r.json());
+    const wesAndScott = await Promise.all(dataPromises);
+    console.log(wesAndScott);
+
+    // You can also destructure the array immediately
+    const [wes, scott] = await Promise.all(dataPromises);
+    console.log(wes, scott);
+}
+```
+- Another way to write the code by passing in an array to the promise
+```js
+async function getData() {
+    const promises = names.map(name => 
+        fetch(`https:/api.github.com/users/${name}`)
+        .then(r => r.json())
+    );
+    const [people] = await Promise.all(promises);
+    console.log(people);
+}
+
+getData(['wesbos', 'stolinski', 'darcyclarke']);
+```
+- We can also use .race() if we want the first response to come back
+- Resolves when the first response comes back
+- Not common in real world scenarios
+- Initiate with `.race()`
+```js
+async function getData() {
+    const promises = names.map(name => 
+        fetch(`https:/api.github.com/users/${name}`)
+        .then(r => r.json())
+    );
+    const [people] = await Promise.race(promises);
+    console.log(people);
+}
+
+getData(['wesbos', 'stolinski', 'darcyclarke']);
+```
+
+## Promisifying Callback Based Functions 
+- If you want to promisify a callback
+- ES6-Promisify library or Node has a built-in utility for this also
+- We are using an older api to get geolocation coordinates
+- But now we want to make it a promise
+```js
+    navigator.geolocation.getCurrentPosition(function(pos) {
+        console.log('it worked!');
+        consolle.log(pos);
+    }, function(err) {
+        console.log('it failed!');
+        consolle.log(err);
+    })
+```
+- We can promisify with:
+```js
+function getCurrentPosition(...args) {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(...args, resolve, reject);
+    })
+}
+
+async function go() {
+    console.log('starting');
+    const pos = await getCurrentPosition();
+    console.log(pos);
+    console.log('finished');
+}
+
+go();
 ```
