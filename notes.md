@@ -1,6 +1,6 @@
 # ES6 For Everyone 
 ## By Wes Bos
-Started 10-08-2017
+Started 10-08-2017 Finished 11-3-2017
 
 # Getting Setup
 - Get the latest browser which is currently most browsers
@@ -3975,4 +3975,173 @@ async function go() {
 }
 
 go();
+```
+
+# Module #21 ES7, ES8 + Beyond
+## Class Properties
+- Class appears in ReactJS
+- When we were working with the Class Dog, say we want to add bark count property
+- It didn't have class properties aka class initializers
+- We had to define it in the constructor first
+- Often, you'll want a lot of initializers and don't want to tack it in the constructor all the time
+```js
+class Dog {
+    constructor(name, breed) {
+        this.name = name;
+        this.breed = breed;
+        this.barks = 0;
+    }
+    bark() {
+        console.log(`Bark Bark! My name is ${this.name}`)
+        this.barks = this.barks + 1;
+        console.log(this.barks);
+    }
+}
+
+const snickers = new Dog('Snickers', 'King Charles');
+const sunny = new Dog('Sunny', 'Golden Doodle');
+)
+```
+- Now there's an initializer being proposed to add it
+- For now, you can use [Babel transform](https://babeljs.io/repl/)
+```js
+class Dog {
+    constructor(name, breed) {
+        this.name = name;
+        this.breed = breed;
+    }
+    barks = 0; // This is the new property
+
+    bark() {
+        console.log(`Bark Bark! My name is ${this.name}`)
+        this.barks = this.barks + 1;
+        console.log(this.barks);
+    }
+}
+
+const snickers = new Dog('Snickers', 'King Charles');
+const sunny = new Dog('Sunny', 'Golden Doodle');
+)
+```
+## padStart and padEnd
+- Two new string methods that adds spaces or characters
+- The default is spaces
+```js
+'wes'.padStart(6) // "   wes"
+'wes'.padEnd(6) // "wes   "
+'wes'.padEnd(6, 'X') // "wesXXX"
+'wes'.padEnd(6, '_') // "wes___"
+```
+- If we want to do it with an array:
+```js
+const strings = ['short', 'medium size', 'thisis really really long'];
+
+strings.forEach(str => console.log(str.padStart(3)));
+```
+- If we want to figure out the length
+```js
+const strings = ['short', 'medium size', 'thisis really really long'];
+const longestString = strings.sort(str => str.length).map(str => str.length)[0];
+console.log(longestString);
+
+strings.forEach(str => console.log(str.padStart(longestString)));
+```
+- We can also use it say in podcast numbers
+```js
+"1".padStart(3); // "  1"
+"1".padStart(3, 0); // "001"
+"1".padStart(3, "hi"); // "hi1"
+"1".padStart(9, "wes"); // "wesweswe1"
+```
+
+## ES7 Exponential Operator
+```js
+['a','b','c'].includes('c'); // true
+
+
+3 ** 3; // 27
+Math.pow(3, 3); // 27
+2**2**2; // 16
+Math.pow(2,2,2); // 4
+Math.pow(Math.pow(2,2),2); // 16
+```
+
+## Function Arguments Trailing Comma
+- Now you can leave trailing commas
+- Problems arose in a team work environment
+- You can set up Prettier or ESLint to do this also
+```js
+const names = ['wes', 'kait', 'lux',];
+const names = [
+    'wes', 
+    'kait', 
+    'lux',
+    'poppy',
+    ];
+
+const people = {
+    wes: 'cool',
+    kait: 'even cooler!',
+    lux: 'coolest',
+    poppy: 'Smallest',
+    snickerss: 'Bow wow',
+}
+
+function family(
+    mom,
+    dad,
+    children,
+    dogs,
+) {}
+```
+
+## Object.entries() and Object.values()
+- Now we have 2 new methods on objects: `Object.entries()` and `Object.values()`
+- We always had `Object.keys()`
+- An example:
+```js
+const inventory = {
+    backpacks: 10,
+    jeans: 23,
+    hoodies: 4,
+    shoes: 11
+}
+
+Objects.keys(inventory); // Gives you an array of keys
+Objects.values(inventory); // Gives you an array of values
+Objects.entries(inventory); // Gives you an array of both keys and values
+
+// Make a nav for the inventory
+const nav = Objects.keys(inventory).map(item => `<li>${item}</li>`).join('');
+console.log(nav);
+
+// Tell us how many values we have
+const totalInventory = Object.values(inventory).reduce((a,b) => a + b);
+console.log(totalInventory);
+
+// Print an inventory list with numbers
+Object.entries(inventory).forEach(pair => {
+    const [key, val] = pair;
+    console.log(key, val);
+})
+
+// Can also destructure as it comes in
+Object.entries(inventory).forEach([key, val] => {
+    console.log(key, val);
+})
+```
+- They are all iterables
+```js
+for (const [key, val] of Object.entries(inventory)) {
+    console.log(key);
+    console.log(val;
+}
+```
+- Benefit of using forOf instead of forEach is the ability to break out
+- Wes prefers to use a .map()
+```js
+for (const [key, val] of Object.entries(inventory)) {
+    console.log(key);
+    if (key === 'jeans') break;
+}
 ```
