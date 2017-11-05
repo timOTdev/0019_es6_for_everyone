@@ -13,9 +13,9 @@ Started 10-08-2017 Finished 11-3-2017
 # Module #1 New Variables - Creation, Updating and Scoping
 ## var Scoping Refresher
 - We have 3 ways to declare JS variables:
-1. var
+1. `var`
 - There's no problem if we put var on the 2nd width also
-- We can use far to update the variable:
+- We can use `var` to update the variable:
 ```js
 var width = 100;
 console.log(width); // 100
@@ -23,7 +23,7 @@ width = 200;
 console.log(width); // 200
 ```
   
-- var variables are function-scoped
+- `var` variables are function-scoped
 - Width not available outside of the gates (curly brackets)
 - The width variable is scoped only to the setWidth() function:
 ```js
@@ -47,7 +47,7 @@ console.log(width); // Will not work
 ```
 
 - Variables are generally scoped in functions, but not scoped with if statements
-- We just needed dogYears variable temporarily here but that's not the case:
+- We just needed dogYears variable temporarily here but it leaked to the global window:
 ```js
 var age = 100;
 if(age > 12) {
@@ -56,7 +56,7 @@ if(age > 12) {
 }
 console.log(dogYears); // Leaked outside of the if block to the global window
 ```
-2. let
+2. `let`
 - Let is scoped to a block, one of its attributes
 ```js
 var age = 100;
@@ -64,10 +64,10 @@ if(age > 12) {
     let dogYears = age * 7;
     console.log(`you are ${dogYears} dog years old!`);
 }
-console.log(dogYears); // Error;
+console.log(dogYears); // error
 ```
 
-3. const
+3. `const`
 - Const is scoped to a block, one of its attributes
 ```js
 var age = 100;
@@ -75,22 +75,22 @@ if(age > 12) {
     const dogYears = age * 7;
     console.log(`you are ${dogYears} dog years old!`);
 }
-console.log(dogYears); // Error;
+console.log(dogYears); // error
 ```
 
 ## let VS const
-1. Let can only be declared once inside of a scope (ie a code block)
+1. `Let` can only be declared once inside of a scope (ie a code block)
 ```js
 let points = 50;
 
-let points = 60; // Error;
+let points = 60; // error
 points = 60; // However, it can be updated
 ```
 
-2. Let can have the same variable name but can be scoped differently
-- The first let is scoped to the window object
-- The second let is scoped to the if statement block
-- If you change winner variable to var, it will return true
+2. `Let` can have the same variable name but can be scoped differently
+- The first `let` is scoped to the window object
+- The second `let` is scoped to the if statement block
+- If you change winner variable to `var`, it will return true
 ```js
 let winner = false;
 
@@ -98,30 +98,31 @@ if (points > 40) {
     let winner = true;
 }
 
-winner; // False
+winner; // false
 ```
 
-3. Const variables cannot be changed but the properties can be updated
-- I think it can only ever be defined once in the whole scope of the file
+3. `Const` variables cannot be changed but the properties can be updated
+- It can only ever be defined once in the whole scope of the file
 ```js
 const key = "abc123";
 
-key = "abc1234"; // Error;
+key = "abc1234"; // error
 ```
   
 - But the properties of the variable inside of the object can be changed
-- A good way to think about it is the person will not ever change
-- But their attributes can change like their age, hair color, clothes
+- A good way to think about it is the person will never change
+- But their attributes can change like their age, hair, clothes
 ```js
 const person = {
     name: "Tim",
     age: "99"
 }
 
-person = {name: "Timothy"} // Error;
+person = {name: "Timothy"} // error
 person.age = 100; // 100
 ```
-- Another important concept if you want to permanently freeze a variable is to use Object.freeze()
+
+- Another important concept if you want to permanently freeze a variable is to use `Object.freeze()`
 - This is not part of ES6 but an existing method
 ```js
 const person = {
@@ -134,14 +135,15 @@ tim.age = 100 // It will pass but won't save
 tim.age; // Still 99
 ```
 
-## let and const in the Real World
-1. Let and const replaces the IFFE (Immediately-Invoked Function Expression)
+## `let` and `const` in the Real World
+1. `Let` and `const` replaces the IFFE (Immediately-Invoked Function Expression)
 ```js
 var name = "Tim"
 
 name; // "Tim"
 ```
-- IFFEs were scoped that was self-contained so that nothing was leaked into the parent scope
+
+- IFFEs are self-contained so that nothing was leaked into the parent scope
 ```js
 (function() {
     var name = "Tim";
@@ -155,20 +157,23 @@ name; // ""
     console.log(name);
 })();
 ```
-- Also, on the window object, there is already a natively defined property called name that refers to current window you're on
+
+- Also, on the window object, there is already a natively defined property called `name` that refers to current window you're on
 - So that's why you get a "" when you call name on the window object
   
-- Using let and const solves this leaking to parent scope problem also:
+- Using `let` and `const` solves this leaking to parent scope problem also:
 ```js
 let name = "Tim";
 name; // "Tim"
 ```
+
 ```js
 {
     let name = "Tim";
 }
 name; // ""
 ```
+
 ```js
 {
     let name = "Tim";
@@ -177,16 +182,17 @@ name; // ""
 // "Tim"
 ```
   
-2. Let solves the problem with for loops
+2. `Let` solves the problem with for loops
 - Setting the stage:
 ```js
 for (var i = 0; i < 10; i ++) {
     console.log(i);
 }
 // 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-i; // 10;
+i; // 10
 ```
-- If we run a setTimout() method:
+
+- If we run a `setTimout()` method:
 ```js
 for (var i = 0; i < 10; i++) {
     console.log(i);
@@ -199,10 +205,12 @@ for (var i = 0; i < 10; i++) {
 // The number is 10
 // And so on..repeated until ten times
 ```
-- Notice that it runs the for loop to get the results and then runs the console.log() (ie 0, 1, 2, etc.)
-- After the console.log() has run, i is now 10, then setTimeout() is ran
-- So at this point you're just console.log() i as 10 
-- So if you want to display "The number is i" with i incrementing in value, use let 
+
+- Notice that the results of the `for` loop completes before 1 second and then runs the `console.log()` afterwards
+- At this point, i is already 10 since it completed outside of the `function()`
+- The reason for this is because var is function scoped
+- So if you want to display "The number is i" with i incrementing in value, use `let` 
+- Remember `let` is block scoped, so it will execute 10 instances of whats in the block
 ```js
 for (let i = 0; i < 10; i++) {
     setTimeout(function() {
@@ -222,28 +230,30 @@ for (let i = 0; i < 10; i++) {
 var pizza = "Deep Dish";
 console.log(pizza); // "Deep Dish"
 ```
-- But what if you call console.log(pizza) before the variable?
+
+- But what if you call `console.log(pizza)` before the variable?
 ```js
 console.log(pizza); // You get undefined
 var pizza = "Deep Dish";
 
 // You can access the variable pizza but not the value
-// Basically, the creation of the variable is acknowledged
+// Basically, the creation of the variable is acknowledged and you get undefined
+// You just can't get the value of the variable
 // To access the value, you have to declare the variable at the top
 ```
   
-- With const or let variables, you will get an error:
+- With `const` or `let` variables, you will get an error:
 - Neither have been pre-declared beforehand
 ```js
-console.log(pizza); // Error;
+console.log(pizza); // error
 let pizza = "Deep Dish";
 
-console.log(pizza); // Error;
+console.log(pizza); // error
 const pizza = "Deep Dish";
 ```
 
 ## Is var Dead? What should I use?
-- Two popular opinions exists for the usage of var, let, and const
+- Two popular opinions exists for the usage of `var`, `let`, and `const`
 - You can decide between the two:
 
 ### First opinion
