@@ -297,28 +297,31 @@ const fullNames2 = names.map((name) => {
     return `${name} bos`;
 })
 
-// 2nd pass: Remove the parenthesis on the parameter
+// 2nd pass: Remove the parentheses on the parameter
 // You can choose to use them with one argument which is okay too
-// If you have multiple arguments, you should use the parenthesis
+// If you have multiple arguments, you should use the parentheses
 const fullNames3 = names.map(name => {
     return `${name} bos`;
 })
 
 // 3rd pass: Create an implicit return
-// Remove the return and brackets
+// Remove the return and curly brackets
 const fullNames4 = names.map(name => `${name} bos`);
 
 // 4th pass: Remove argument if there are none
-// Still need empty parenthesis
+// Still need empty parentheses
 const fullNames5 = names.map(() => `cool bos`);
 ```
+
 ### Arrow functions are anonymous functions
 - Unlike a named function, you can't give the function a name:
 ```js
+// You can't do this with arrow functions
 function sayMyName(name) {
     alert(`Hello ${name}`);
 }
 ```
+
 - However, you can put it in a variable:
 ```js
 const sayMyName = (name) => { alert(`Hello ${name}!`) }
@@ -342,11 +345,11 @@ const winners = ["Hunter Gath", "Singa Song", "Imda Bos"];
 ```
   
 - So now we want to loop over the winners array and return an object
-- Notice that we used 2 parameters, must have parenthesis
-- If we want to return an object implicitly, must have parenthesis around that object
+- Notice that we used 2 parameters, must have parentheses
+- If we want to return an object implicitly, must have parentheses around that object
 - Otherwise, it is treated as brackets of a function
 - We also have to add +1 on to i because it's based off 1st, 2nd, 3rd place and not 0
-- Also, use console.table(), it's great
+- Also, use console.table(), it's cool
 ```js
 const race = "100m Dash";
 const winners = ["Hunter Gath", "Singa Song", "Imda Bos"];
@@ -356,6 +359,7 @@ const win = winners.map( (winner, i) => ({name: winner, race: race, place: i + 1
 win; // Returns 3 objects
 console.table(win); // Better way to return objects in a table
 ```
+
 - Another new feature in ES6:
 ```js
 ({name: winner, race, place: i + 1}) // You can also refactor "race: race" to "race"
@@ -373,7 +377,7 @@ console.log(old); // [62,234,62,234,62]
 ```
 
 ## Arrow Functions and `this`
-- When using arrow functions, the "this" keyword does not get rebound
+- When using arrow functions, the `this` keyword does not get rebound
 - In this example, Wes has a transition on a box that grows in size with text sliding in
 - Setting the stage:
 ```js
@@ -384,6 +388,7 @@ box.addEventListener('click', function() {
 
 // "this" refers to box which refers to .box, so it works
 ```
+
 - If we change to an arrow function:
 ```js
 const box = document.querySelector('.box');
@@ -393,8 +398,9 @@ box.addEventListener('click', () => {
 
 // "this" will refer to the window object
 // Because using arrow functions refers to the parent scope, this case, the window object
-// The arrow function is not inside of the another block so it takes on the parent object
+// The arrow function is not inside of the another block either
 ```
+
 - So now changing it back to function(), we want to toggle the box to open up:
 ```js
 const box = document.querySelector('.box');
@@ -402,6 +408,7 @@ box.addEventListener('click', function() => {
     this.classList.toggle('opening');
     })
 ```
+
 - Also add the text to slide in after half a second:
 ```js
 const box = document.querySelector('.box');
@@ -418,13 +425,14 @@ box.addEventListener('click', function() => {
 // Since we started a new function, it is not bound to anything
 // "this" refers to the parent scope defined outside for that reason
 ```
+
 - We change the setTimeOut function to an arrow function to fix this:
 ```js
 const box = document.querySelector('.box');
-box.addEventListener('click', function() => { // "this" from following line refers to box
-    this.classList.toggle('opening'); // setTimeout's "this" refers here
+box.addEventListener('click', function() => { // Reference B: "this" from following line refers to box
+    this.classList.toggle('opening'); // Reference A: setTimeout's "this" refers here, "this" refers to Reference B
     setTimeout(() => {
-        console.log(this); // "this" refers to the this next to .classList
+        console.log(this); // "this" refers to the Reference A
         this.classList.toggle('open');
         }, 500);
     });
@@ -433,7 +441,7 @@ box.addEventListener('click', function() => { // "this" from following line refe
 // It inherits the value of "this" from the parent function
 // Reason is because it is inside of another function
 // We do not have to worry about the scope changing
-// It will now take on the value of "this" in this.classList, which in turn refers to the box 
+// It will now take on the value of "this" in `this.classList`, which in turn refers to the box 
 ```
 
 ### Solving the reverse animation
@@ -461,8 +469,8 @@ box.addEventListener('click', function() => {
 ```
 
 ## Default Function Arguments
-- Default Function Arguments make your code much more readable and maintainable
-- Setting the state for a calculate bill example:
+- Default function arguments make your code much more readable and maintainable
+- Setting the stage for a calculate bill example:
 ```js
 function calculateBill(total, tax, tip) {
     return total + (total * tax) + (total * tip);
@@ -473,9 +481,10 @@ console.log(totalBill); // 128
 
 const totalBill = calculateBill(100);
 console.log(totalBill); // NaN
-// So what do we do if we don't know the tax and tip rate and just assume?
+// So how we set a default for the tax and tip?
 // Those values for tax and tip will be undefined if you leave them blank
 ```
+
 - Normally, what we would do is 1 of 2 ways:
 - The problem is the code is cumbersome
 ```js
@@ -500,13 +509,14 @@ function calculateBill(total, tax, tip) {
 ```
 
 ### Setting default function arguments
-- Instead now in ES6, we can just set the values in the parameters:
+- Instead now in ES6, we can just set the values as default in the parameters:
 - So if nothing is passed in for those parameters, those default values will pass in
 ```js
 function calculateBill (total, tax = 0.13, tip = 0.15) {
     return total + (total * tax) + (total * tip);
 }
 ```
+
 - Can we leave one of the arguments emtpy?
 - No, you have to set it as undefined
 ```js
@@ -515,8 +525,9 @@ function calculateBill (total, tax = 0.13, tip = 0.15) {
 }
 
 const totalBill = calculateBill(100, , 0.25);
-console.log(totalBill); // Error;
+console.log(totalBill); // error
 ```
+
 - Instead, just explicitly pass undefined:
 ```js
 function calculateBill (total, tax = 0.13, tip = 0.15) {
@@ -529,19 +540,20 @@ console.log(totalBill); // 138;
 
 ## When NOT to use an Arrow Function
 - These are 4 situations when you don't want to use the arrow function
+
 ### 1. When you really need `this`:
 - This function turns a button yellow on and off
 ```js
 // The wrong way
+// "this" was bound to the window object because it was not inside of a function
+// If you console.log(this), you will find that it's the window
 const button = document.querySelector('#pushy');
 button.addEventListener('click', () => {
     this.classList.toggle('on');
 });
 
-// "this" was bound to the window object because it was not inside of a function
-// If you console.log(this), you will find that it's the window
-
 // The right way
+// "this" will be correctly bound to the button instead of the window
 const button = document.querySelector('#pushy');
 button.addEventListener('click', function() {
     this.classList.toggle('on');
@@ -551,6 +563,8 @@ button.addEventListener('click', function() {
 ### 2. When you need a method to bind to an object:
 ```js
 // The wrong way
+// "this" keyword was not bound to the object so you need to use function()
+// If you console.log(this), you will find that it's the window
 const person = {
     points: 23,
     score: () => {
@@ -563,9 +577,6 @@ console.log(person.score()); // Should be 24
 console.log(person.score()); // Should be 25
 console.log(person.score()); // Should be 26
 console.log(person.points); // Still 23
-
-// "this" keyword was not bound to the object so you need to use function()
-// If you console.log(this), you will find that it's the window
 
 // The right way
 const person = {
@@ -591,7 +602,7 @@ const person = {
 ```
 
 ### 3. When you need to add a prototype method
-- We have not learned about class yet
+- We have not learned about ES6's Class yet
 - We have a prototype to summarize the type of car and color
 ```js
 // The wrong way
@@ -612,7 +623,6 @@ Car.prototype.summarize = () => {
 subie; // Car {make: "Subaru", colour: "white"}
 beemer; // Car {make: "bmw", colour, "blue"}
 subie.summarize(); // "This car is undefined in the colour undefined"
-
 // This was not bound to the Car constructor so we need to use function() here
 
 // The right way
