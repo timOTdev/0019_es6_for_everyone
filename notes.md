@@ -617,7 +617,7 @@ const beemer = new Car("bmw", "blue");
 const subie = new Car("Subaru", "white");
 
 Car.prototype.summarize = () => {
-    return `this care is a ${this.make} in the colour ${this.colour}`;
+    return `this car is a ${this.make} in the colour ${this.colour}`;
 }
 
 subie; // Car {make: "Subaru", colour: "white"}
@@ -758,7 +758,7 @@ const orderChildren = function() => {
 # Module #3 Template Strings
 ## Template Strings Introduction
 - In other languages we can stick variables right into the string
-- Now in JS, it's possible with template strings (aka template literals)s
+- Now in JS, it's possible with template strings (aka template literals)
 - Here we convert a string with variables under one tag
 - Backticks are new in ES6 and initiates template strings
 ```js
@@ -785,6 +785,7 @@ var text = "hello there, \
     how are you \
 ";
 ```
+
 - Now we can use multi-line strings:
 - It will take care of the return's and spacing
 ```js
@@ -801,6 +802,7 @@ const markup = `
 
 document.body.innerHTML = markup;
 ```
+
 ### 2. Nesting strings inside of each other
 - You can write string literals and use map functions inside of another string literal
 - We use .join('') to remove the commas between the items in an array
@@ -811,17 +813,15 @@ const dogs = [
     { name: "Sunny", age: 1}
 ]
 
-const markup = `
-    <ul class="dogs">
-        ${dogs.map(dog => `<li>${dog.name} is ${dog.age * 7}</li>`).join("")}
-    </ul>    
-`;
+const markup =`<ul class="dogs">
+        ${dogs.map(dog => `<li>${dog.name} is ${dog.age * 7}</li>`).join("")};
+    </ul>`;
 
 document.body.innerHTML = markup;
 ```
 
 ### Using if statements inside a string template using ternary operator
-- This is taken from react.render() 
+- This is taken from React.render() 
 - We are writing a song name and artist
 - If there is a featuring, we want to add that using a ternary operator
 ```js
@@ -869,6 +869,7 @@ const markup = `
     </div>
 `;
 ```
+
 ## Tagged Template Literals
 - We can tag the strings
 - We can used templates to craft our own strings
@@ -879,10 +880,10 @@ const sentence = `My dogs's name is ${name} and he is ${age} years old`;
 
 console.log(sentence);
 ```
+
 - We tag the string with a function so it runs on the string
 - Notice that we tagged the string with highlight word in front
 - So the const sentence will be the result after the highlight function has processed the defined string
-- It is basically a step in between
 - Notice that we used logical operators to counter any undefined values
 ```js
 function highlight(strings, ...values) {
@@ -898,6 +899,7 @@ const sentence = highlight`My dogs's name is ${name} and he is ${age} years old`
 
 console.log(sentence);
 ```
+
 - Moving on, what can we do with this new string?
 - We can highlight the values
 - We can make boxes editable
@@ -939,7 +941,7 @@ function highlight(strings, ...values) {
 // Values (Array[2]): 0:"Snickers", 1:100
 ```
 - You will notice that the amount of strings is always 1 more than the values
-- Strings has 3 values and Values has only 2 values
+- `Strings` has 3 values and `values` has only 2 values
 - It breaks ups the string to as many pieces as it can until a variable stops it
 
 ## Tagged Template Exercise
@@ -1001,6 +1003,7 @@ const p = document.createElement('p');
 p.innerHTML = sentence;
 bio.appendChild(p);
 ```
+
 ### Stringing together the new sentence
 - We can choose to use `let str = ''` or .reduce()
 - 1. let str
@@ -1045,8 +1048,8 @@ bio.appendChild(p);
 ```
 ## Sanitizing User Data with Tagged Templates
 - With a security background, you need to sanitize the data
-- They might insert JS that might be harmful to your website
-- They might run some onload or JS to steal information, post as you
+- Users might insert JS during a prompt that might be harmful to your website
+- They might run some onload or JS to steal information, post as you on facebook
 - Setting the stage:
 ```js
 const first = 'Wes';
@@ -1082,6 +1085,7 @@ const html = `
 const bio = document.querySelector('.bio');
 bio.innerHTML = html;
 ```
+
 # Module #4 Additional String Improvements
 ## New String Methods
 - Strings in ES6 comes with 4 new methods: `.startsWith()`, `.endsWith()`, `.includes()`, `.repeat()`
