@@ -43,7 +43,7 @@ function setWidth() {
     console.log(width);
 }
 setWidth(); // Will work
-console.log(width); // Will not work
+console.log(width); // Will work because the value is pushed outside of the function
 ```
 
 - Variables are generally scoped in functions, but not scoped with if statements
@@ -93,6 +93,7 @@ points = 60; // However, it can be updated
 - If you change winner variable to `var`, it will return true
 ```js
 let winner = false;
+let points = 45;
 
 if (points > 40) {
     let winner = true;
@@ -118,8 +119,9 @@ const person = {
     age: "99"
 }
 
-person = {name: "Timothy"} // error
-person.age = 100; // 100
+person = {name: "Timothy"} // error, can't change the variable
+person.age = 100; // can change the properties of a variable
+person.age; // 100
 ```
 
 - Another important concept if you want to permanently freeze a variable is to use `Object.freeze()`
@@ -207,7 +209,7 @@ for (var i = 0; i < 10; i++) {
 ```
 
 - Notice that the results of the `for` loop completes before 1 second and then runs the `console.log()` afterwards
-- At this point, i is already 10 since it completed outside of the `function()`
+- At this point, `i` is already 10 since it completed outside of the `function()`
 - The reason for this is because var is function scoped
 - So if you want to display "The number is i" with i incrementing in value, use `let` 
 - Remember `let` is block scoped, so it will execute 10 instances of whats in the block
@@ -314,7 +316,7 @@ const fullNames5 = names.map(() => `cool bos`);
 ```
 
 ### Arrow functions are anonymous functions
-- Unlike a named function, you can't give the function a name:
+- Unlike a named function, you can't give the arrow function a name:
 ```js
 // You can't do this with arrow functions
 function sayMyName(name) {
@@ -367,8 +369,8 @@ console.table(win); // Better way to return objects in a table
 
 ### Age Example
 - We want to filter people older than 60 years old
-- Normally we use an "if" statement, but we can use .filter() instead
-- It looks strange with => and >= in the same line:
+- Normally we use an `if` statement, but we can use .filter() instead
+- It looks strange with `=>` and `>=` in the same line:
 ```js
 const ages = [23,62,45,234,2,62,234,62,34];
 
@@ -623,6 +625,7 @@ Car.prototype.summarize = () => {
 subie; // Car {make: "Subaru", colour: "white"}
 beemer; // Car {make: "bmw", colour, "blue"}
 subie.summarize(); // "This car is undefined in the colour undefined"
+beemer.summarize(); // "This car is undefined in the colour undefined"
 // This was not bound to the Car constructor so we need to use function() here
 
 // The right way
@@ -649,6 +652,7 @@ bmw.summarize(); // "This car is bmw in the colour blue"
 - We have an "arguments" keyword that returns keywords from function
 ```js
 // The wrong way
+// You do not get arguments if you use an arrow function
 const orderChildren = () => {
     const children = Array.from(arguments);
     return children.map((child, i) => {
@@ -656,8 +660,6 @@ const orderChildren = () => {
     })
     console.log(arguments); // Error;
 }
-
-// You do not get arguments if you use an arrow function
 
 // The right way
 const orderChildren = function() => {
