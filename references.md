@@ -57,9 +57,16 @@
 # Module #4
 14. `.startsWith()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
+    - 1st paramenter is what you're searching for
+    - 2nd parameter is a number of the index where to start searching
 15. `.endsWith()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
+    - 1st paramenter is what you're searching for
+    - 2nd parameter is a number where only values before this index is considered
 16. `.includes()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
+    - 1st paramenter is what you're searching for
+    - 2nd parameter is a number of the index where to start searching
 17. `.repeat()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat)
+    - 1st parameter takes in how many times to repeat the string

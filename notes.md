@@ -1104,7 +1104,7 @@ const accountNumber = '825242631RT0001';
 
 const make = 'BMW';
 const model = 'x5';
-cons colour = 'Royal Blue';
+const colour = 'Royal Blue';
 ```
 
 ### .startsWith()
@@ -1126,6 +1126,7 @@ flightNumber.endsWith('jz'); // true
 accountNumber.endsWith('RT'); // false
 accountNumber.endsWith('RT', 11); // true, take only the 1st eleven numbers into account
 ```
+
 ### .includes()
 - Results:
 ```js
