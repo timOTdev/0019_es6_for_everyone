@@ -33,6 +33,7 @@
     - Create a new array
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
 8. Default arguments
+    - You can set a default value for a parameter
 
 # Module #3
 9. Template Strings
@@ -46,13 +47,19 @@
     - Can build the string yourself essentially
 11. `.reduce()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce?v=a)
+12. `<abbr>`
+    - Creates a mini pop up if the abbreviation has a full definition that is set
+13. [DOM Purify](https://github.com/cure53/DOMPurify)
+    - Library to clean up malicious code
+    - Add a script to the bottom of the body `<script type="text/javascript" src="dist/purify.min.js"></script>`
+    - The code to run it is `var clean = DOMPurify.sanitize(dirty);`
 
 # Module #4
-12. `.startsWith()`
+14. `.startsWith()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
-13. `.endsWith()`
+15. `.endsWith()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith)
-14. `.includes()`
+16. `.includes()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
-15. `.repeat()`
+17. `.repeat()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat)

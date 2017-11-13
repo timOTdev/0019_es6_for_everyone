@@ -774,7 +774,7 @@ console.log(sentence); // "My dog Snickers is 14 years old."
 ## Creating HTML fragments with Template Literals
 ### 1. Writing multiple lines of codes easily
 - We can now type all our text without using multiple lines
-- In the past:
+- In the past, you had to add backslashes:
 ```js
 const person = {
     name: "Wes",
@@ -843,8 +843,8 @@ const markup = `
 `;
 ```
 
-### Create a render function from react
-- Make separate components to handle the complex information
+### Create a render function from React
+- Make separate components to handle the complex information in React
 - Here we are making a separate function to render all the keywords:
 ```js
 const beer = {
@@ -884,7 +884,7 @@ console.log(sentence);
 ```
 
 - We tag the string with a function so it runs on the string
-- Notice that we tagged the string with highlight word in front
+- Notice that we tagged the string with `highlight` in front
 - So the const sentence will be the result after the highlight function has processed the defined string
 - Notice that we used logical operators to counter any undefined values
 ```js
@@ -897,7 +897,7 @@ function highlight(strings, ...values) {
 }
 const name = 'Snickers';
 const age = 100;
-const sentence = highlight`My dogs's name is ${name} and he is ${age} years old`;
+const sentence = highlight`My dog's name is ${name} and he is ${age} years old`;
 
 console.log(sentence);
 ```
@@ -930,7 +930,7 @@ document.body.innerHTML = sentence;
 
 ### Sidenote #1 Rest Operator
 - For the parameters, sometimes we don't know arguments already so we use the rest operator (...values) 
-- The syntax: `function highlight(strings, names, age, etc.)` turns to `function highlight(strings, ...values)`
+- The syntax: `function highlight(strings, names, age, etc.)` can be shortened to `function highlight(strings, ...values)`
 
 ### Sidenote #2 Debugger with tagged templates
 - After running the debugger:
@@ -943,14 +943,14 @@ function highlight(strings, ...values) {
 // Values (Array[2]): 0:"Snickers", 1:100
 ```
 - You will notice that the amount of strings is always 1 more than the values
-- `Strings` has 3 values and `values` has only 2 values
+- `strings` has 3 values and `values` has only 2 values
 - It breaks ups the string to as many pieces as it can until a variable stops it
 
 ## Tagged Template Exercise
 - When you're trying to add an abbreviation tag to a sentence
 - Notice we do not have variables for HTML, CSS, JS
-- But it will still render as a value which is useful later
-- We also append the sentence with JS
+- But it will still render as a value if placed inside template strings
+- We also append the sentence with JS with `.appendChild()`
 - Setting the stage:
 ```js
 <body>
@@ -1034,14 +1034,14 @@ function addAbbreviations(strings, ...values) {
         return value;
     });
 
-    return string.reduce((sentence, string, i) => {
+    return strings.reduce((sentence, string, i) => {
         return `${sentence}${string}${abbreviated[i] || ''}`;
     }, '')
 }
 
 const first = 'Wes';
 const last = 'Bos';
-const sentence = `Hello my name is ${first} ${last} and I love to code ${'HTML'}, ${'CSS'}, ${'JS'}`;
+const sentence = addAbbreviations`Hello my name is ${first} ${last} and I love to code ${'HTML'}, ${'CSS'}, ${'JS'}`;
 
 const bio = document.querySelector('.bio');
 const p = document.createElement('p');
@@ -1049,9 +1049,9 @@ p.innerHTML = sentence;
 bio.appendChild(p);
 ```
 ## Sanitizing User Data with Tagged Templates
-- With a security background, you need to sanitize the data
+- With security issues, you need to sanitize the data
 - Users might insert JS during a prompt that might be harmful to your website
-- They might run some onload or JS to steal information, post as you on facebook
+- They might run some onload, steal information, or post as you on facebook
 - Setting the stage:
 ```js
 const first = 'Wes';
@@ -1066,7 +1066,8 @@ const bio = document.querySelector('.bio');
 bio.innerHTML = html;
 ```
   
-- Now we are using [DOMpurify](https://github.com/cure53/DOMPurify) to add a script `<script type="text/javascript" src="dist/purify.min.js"></script>`
+- Now we are using [DOMpurify](https://github.com/cure53/DOMPurify)
+- Add a script to the bottom of the body `<script type="text/javascript" src="dist/purify.min.js"></script>`
 - The code to run it is `var clean = DOMPurify.sanitize(dirty);`
 - We are also making a sanitize function:
 ```js
@@ -1087,6 +1088,8 @@ const html = `
 const bio = document.querySelector('.bio');
 bio.innerHTML = html;
 ```
+- Now the code should be clean
+- You can tag on the sanitize function anywhere you need it
 
 # Module #4 Additional String Improvements
 ## New String Methods
