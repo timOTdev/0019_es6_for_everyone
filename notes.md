@@ -1048,6 +1048,7 @@ const p = document.createElement('p');
 p.innerHTML = sentence;
 bio.appendChild(p);
 ```
+
 ## Sanitizing User Data with Tagged Templates
 - With security issues, you need to sanitize the data
 - Users might insert JS during a prompt that might be harmful to your website
@@ -1140,7 +1141,7 @@ flightNumber.includes('ac'); // false
 ```js
 // We are making a left-pad function
 function leftPad(str, length = 20) {
-    return `-> ${` `.repeate(length - str.length)}`;
+    return `-> ${` `.repeat(length - str.length)}`;
 }
 
 console.log(leftPad(make));
@@ -1192,7 +1193,7 @@ const twitter = wes.links.social.twitter;
 const facebook = wes.links.social.facebook;
 
 // With destructuring:
-// We are also renaming the variable as we are destructuring using:
+// We can also renaming the variable as we are destructuring using:
 // We are renaming variable names from twitter to tweet and facebook to fb
 const { twitter:tweet, facebook:fb } = wes.links.social;
 ```
@@ -1208,7 +1209,7 @@ var settings = {width: 300, color: 'black'}
 // We destructure all four variables
 const { width, height, color, fontSize} = settings;
 ```
-- So when we destructure we can set a fallback also:
+- So when we destructure we can set a default also:
 ```js
 var settings = {width: 300, color: 'black'}
 const { width = 100, height = 100, color = 'blue', fontSize = 25 } = settings;
@@ -1228,7 +1229,7 @@ const { w: width = 400, h: height = 500 } = {w: 800}
 // Notice the renaming of w to width and h to height also
 ```
 ## Destructuring Arrays
-- Also works with arrays but we use brackets instead
+- Also works with arrays and we use brackets instead
 ```js
 const details = ['Wes Bos', 123, 'wesbos.com'];
 
@@ -1237,7 +1238,7 @@ const name = details[0];
 const id = details[1];
 const id = details[1];
 
-// ES6 syntax;
+// ES6 syntax:
 const [name, id, website] = details;
 console.log(name, id, website);
 ```
@@ -1252,7 +1253,7 @@ const [itemName, category, sku, iventory] = data.split(',');
 console.log(itemName, category, sku, inventory); // Basketball Sports 90210 23
 ```
 
--2nd example:
+- 2nd example:
 ```js
 const team = ["Wes", "Harry", "Sarah", "Keegan", "Riker"];
 
@@ -1277,7 +1278,7 @@ inRing; // "Hulk Hogan"
 inRing = onSide; // "The Rock"
 inRing; // "The Rock"
 
-// So we fix that with:
+// So the old syntax we fix that with:
 var temp = inRing;
 inRing = onSide;
 onSide = temp;
@@ -1309,13 +1310,13 @@ console.log(hundo.AUD); // 101
 console.log(hundo.MEX); // 1330
 
 // ES6 syntax
-// The order does not matter since it's an object
 const { USD, GPB, AUD, MEX } = convertCurrency(100);
-console.log(USD, GPB, AUD, MEX ); // {76, 53, 101, 1330} 
+console.log(USD, GPB, AUD, MEX); // {76, 53, 101, 1330} 
 console.log(USD, AUD); // Can choose and pick which to return
 
-// Order does not matter
+// Order does not matter or if we leave something off
 const { MEX, GPB, AUD, USD } = convertCurrency(100);
+const { GPB, USD } = convertCurrency(100);
 console.log(GPB, USD); 
 
 MEX; // 1330
@@ -1336,10 +1337,10 @@ console.log(bill); // 266
 
 // If we leave an argument out, default values kick in
 // Order of arguments does not matter
-const bill = tipCalc({ tip: 0.20, total: 200});
+const bill = tipCalc({ tip: 0.20, total: 200 });
 ```
   
-- What if we ran it without arguments?
+- What if we ran it without any arguments?
 - We then have to destructure the whole arguments string
 ```js
 // If you pass in nothing:
@@ -1348,7 +1349,7 @@ function tipCalc({ total, tip = 0.15, tax = 0.13 }) {
 }
 const bill = tipCalc(); // Error;
 
-// So you have to destructure 
+// So you have to destructure the whole object
 function tipCalc({ total = 100, tip = 0.15, tax = 0.13} = {}) {
     return total + (tip * total) + (tax * total);
 }
