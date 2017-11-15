@@ -1361,8 +1361,8 @@ function tipCalc({ total = 100, tip = 0.15, tax = 0.13} = {}) {
 - Iterators are things that you can loop over
 - Like arrays, strings, maps, sets, generators
 
-### For Loop
-- A For loop is confusing, hard to read
+### `for` Loop
+- A `for` loop is confusing, hard to read
 ```js
 const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
 
@@ -1371,7 +1371,7 @@ for (let i  0; i < cuts.length; i++) {
 }
 ```
 
-### ForEach loop
+### `.forEach()` loop
 - Can't abort loop or skip an entry
 - Using break won't work, will return error
 - Using continue won't work, will return error
@@ -1383,14 +1383,14 @@ cuts.forEach((cut) => {
 });
 ```
 
-### ForIn loop
+### `forIn` loop
 - Returns index for us
 ```js
 for (const index in cuts) {
     console.log(cuts[index]); // Chuck Brisket Shank Short Rib
 }
 ```
-- The problem is that if the prototype is altered
+- The problem is that if the prototype is altered, it will return that also
 - There are libraries (ie MooTools) and people that change array.prototype
 - Wes's Shuffle prototype for example:
 - So it shuffles an array for us
@@ -1407,6 +1407,7 @@ Array.prototype.shuffle = function() {
     return this;
 };
 ```
+
 - But when we run the ForIn function:
 - It iterates over the function also, which we don't want
 ```js
@@ -1415,20 +1416,21 @@ for (const index in cuts) {
 }
 ```
   
-- Another example:
+- Another example that has MooTools:
 ```js
 var names = ['wes', 'lux']
 for(name in names) { console.log(name)}; // 0, 1, and a ton of methods
 ```
 
-### ForOf loop
-- Need to put const in or it will leak into the global variable
-- ForOf loops can only handle iterables, it can't do objects
+### `forOf` loop
+- Need to put `const` in or it will leak into the global variable
+- `forOf` loops can only handle iterables, it can't do objects
 ```js
 for (const cut of cuts) {
     console.log(cut); // Chuck Brisket Shank Short Rib
 }
 ```
+
 - If we want to put a break after Brisket:
 ```js
 for (const cut of cuts) {
@@ -1438,6 +1440,7 @@ for (const cut of cuts) {
     }
 }
 ```
+
 - If we want to skip Brisket:
 ```js
 for (const cut of cuts) {
@@ -1448,7 +1451,7 @@ for (const cut of cuts) {
 }
 ```
 
-## The for of Loop in Action
+## The `forOf` Loop in Action
 - Can generally handle all types of datas except objects
 ```js
 const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
@@ -1457,13 +1460,17 @@ for(const cut of cuts) {
     console.log(cut);
 }
 ```
-- We can use entries:
+
+- We can use `.entries()`:
+- Gives you the ArrayIterator and gives you index and value
+- You can advance with `.next()`
 - Put this into the console to experiment
 ```js
 const meat = cuts.entries(); // ArrayIterator
 
 meat.next(); // Returns the next object in the array
 ```
+
 - So we update our code:
 ```js
 const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
@@ -1480,7 +1487,7 @@ for(const [i, cut] of cuts.entries()) {
 
 ### Iterating over the arguments objects
 - Add up numbers example:
-- "arguments" looks exact like a regular array and has only length property
+- `arguments` looks exact like a regular array and has only length property
 ```js
 function addUpNumbers() {
     console.log(arguments); // Returns an arrayish, not an exact array
@@ -1488,7 +1495,8 @@ function addUpNumbers() {
 
 addUpNumbers(10,23,52,34,12,13,123);
 ```
-- Normally, you can just make an array out of the "arguments", then .reduce() it
+
+- Normally, you can just make an array out of the `arguments`, then `.reduce()` it
 - There's another way to convert without using an array:
 ```js
 function addUpNumbers() {
@@ -1513,6 +1521,7 @@ for (const char of name) {
     console.log(char); // W e s B o s
 }
 ```
+
 ### DOM collectors 
 - Node list, or html collections are being changed but not true arrays in most browsers
 ```html
@@ -1543,13 +1552,13 @@ for (const paragraph of ps) {
 
 ```
 
-## Using for of with Objects
+## Using `forOf` with Objects
 - We have not been able to iterate over objects
 - There is no [Symbol.iterator]
 - We can use `.entries()` as in `for (const prop of apple.entries()) {}`
-- Object.values() and Object.entries() are going to be in ES2017, for now we can polyfill
-- But now we can use Object.keys() for now, it returns the keys of an object
-- Wes's recommendation is to use a ForIn until we get .entries() for objects
+- `Object.values()` and `Object.entries()` are going to be in ES2017, for now we can polyfill
+- But now we can use `Object.keys()` for now, it returns the keys of an object
+- Wes's recommendation is to use a `forIn` until we get `.entries()` for objects
 ```js
 const apple = {
     color: 'Red',

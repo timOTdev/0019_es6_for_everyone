@@ -173,3 +173,61 @@ function tipCalc({ total = 100, tip = 0.15, tax = 0.13} = {}) {
     return total + (tip * total) + (tax * total);
 }
 ```
+
+# Module #6
+- You can't use break or continue with `.forEach()`
+24. `for in` Loop
+    - Works on all iterables
+    - Returns the index
+    - Will also return all prototype methods that were added
+    - Recommended for use with objects at the current time
+```js
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
+
+for (const index in cuts) {
+    console.log(cuts[index]);
+}
+```
+
+25. `for of` Loop
+    - Works on all iterables EXCEPT objects
+    - Currently, `Object.entries()` for objects is being implemented
+    - Meantime, you can use `Object.keys()` or the `for in` loop
+    - Able to break and continue the loop
+    - Can use with `arguments` keyword
+```js
+const cuts = ['Chuck', 'Brisket', 'Shank', 'Short Rib'];
+
+for (const index of cuts) {
+    if(cut === 'Brisket') {
+        break;
+    }
+    console.log(cut);
+}
+```
+
+26. `.entries()`
+    - Gives you the ArrayIterator and gives you index and value
+    - You can advance with `.next()`
+    - I think this is a generator
+```js
+const meat = cuts.entries(); // ArrayIterator
+
+meat.next(); // Returns the next object in the array
+```
+
+27. `arguments` keyword
+    - Returns an array-ish because it has the Symbol.iterator
+    - Normally, we just convert to an array and use `.reduce()`
+```js
+function addUpNumbers() {
+    console.log(arguments); // Returns an arrayish, not an exact array
+}
+
+addUpNumbers(10,23,52,34,12,13,123);
+```
+
+28. `Object.keys`
+    - Returns an array of all the keys in an object
+    - Current substitute for `for of` with objects
+    
