@@ -1581,9 +1581,9 @@ for (const prop in apple) {
 ```
 
 # Module #7 An Array of Array Improvements
-## Array.from() and Array.of()
+## `Array.from()` and `Array.of()`
 - These methods are not on the prototype, they are on the array itself
-- Array.from() will turn something into an array from something that is array-ish
+- `Array.from()` will turn something into an array from something that is array-ish
 - People example:
 ```html
 <div class="people">
@@ -1598,6 +1598,7 @@ const names = people.map(person => person.textContent);
 
 console.log(people); // Nodelist
 ```
+
 - Since it is a Nodelist, we need to convert it
 ```html
 <div class="people">
@@ -1627,7 +1628,7 @@ console.log(peopleArray);
 ```
 
 ### Converting arguments object to an array
-- Common use case because "arguments" reserve keyword is not a real array
+- Common use case because `arguments` reserve keyword is not a real array
 ```js
 function sumAll() {
     console.log(arguments); // Arrayish, not an array
@@ -1643,20 +1644,20 @@ function sumAll() {
 }
 ```
 
-### Array.of() method
+### `Array.of()` method
 - When we need to convert arguments into an array:
 - It could be numbers or strings
 - You have to capitalize the A in array or will not work
-- Different from Array() method because that will return an empty array with length property if supplied a single digit
+- Different from `Array()` method because that will return an empty array with length property if supplied a single digit
 ```js
 const ages = Array.of(12,4,23,62,34);
 console.log(ages); // returns an array of these numbers
 ```
 
-## Array.find() and .findIndex()
+## `.find()` and `.findIndex()`
 - Helps you to find some data that comes back from an API
-- .find() helps you find if something exist, returns boolean
-- .findIndex() finds the index where something occurs
+- `.find()` helps you find if something exist, returns boolean
+- `.findIndex()` finds the index where something occurs
 - Twitter example;
 ```js
 // Will now return that specific instagram post from that ID
@@ -1675,7 +1676,7 @@ const post = posts.find(post => post.code === code);
 console.log(post);
 ```
 
-### .findIndex()
+### `.findIndex()`
 ```js
 const postIndex = posts.findIndex((post) => {
     if(post.code === code) {
@@ -1688,10 +1689,10 @@ const postIndex = posts.findIndex((post) => {
 const postIndex =  posts.findIndex(post => post.code === code);
 ```
 
-## Array.some() and .every()
+## `.some()` and `.every()`
 - Not part of ES6 but want to showcase it
-- .some() checks if at least one meets the requirement
-- .every() checks if all meets the requirement
+- `.some()` checks if at least one meets the requirement
+- `.every()` checks if all meets the requirement
 ```js
 const ages = [32, 15, 19, 12];
 const youngins = [1, 2, 2, 5];

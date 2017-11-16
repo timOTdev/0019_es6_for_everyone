@@ -1,7 +1,7 @@
 # My Quick Reference: ES6 For Everyone
 ## By Wes Bos
 
-# Module #1
+# Module #1 New Variables - Creation, Updating, Scoping
 1. `var` keyword 
     - Function scoped
 
@@ -21,7 +21,7 @@
 4. `Object.freeze()`
     - Locks properties of an object
 
-# Module #2
+# Module #2 Function Improvements: Arrow and Default Arguments
 5. Arrow function
     - More concise
     - Has implicit returns
@@ -41,7 +41,7 @@
 8. Default arguments
     - You can set a default value for a parameter
 
-# Module #3
+# Module #3 Template Strings
 9. Template Strings
     - Use backticks and dollar sign + curly brackets
     - Can make multi-line strings
@@ -64,7 +64,7 @@
     - Add a script to the bottom of the body `<script type="text/javascript" src="dist/purify.min.js"></script>`
     - The code to run it is `var clean = DOMPurify.sanitize(dirty);`
 
-# Module #4
+# Module #4 Additional String Improvements
 14. `.startsWith()`
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith)
     - 1st paramenter is what you're searching for
@@ -84,7 +84,7 @@
     - [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat)
     - 1st parameter takes in how many times to repeat the string
 
-# Module #5
+# Module #5 Destructuring
 18. Destructuring Objects
     - Done with `const { <key> } = <object>`
     - Expand `<object>` for deeper nested keys
@@ -174,7 +174,7 @@ function tipCalc({ total = 100, tip = 0.15, tax = 0.13} = {}) {
 }
 ```
 
-# Module #6
+# Module #6 Iterables & Looping
 - You can't use break or continue with `.forEach()`
 24. `for in` Loop
     - Works on all iterables
@@ -230,4 +230,102 @@ addUpNumbers(10,23,52,34,12,13,123);
 28. `Object.keys`
     - Returns an array of all the keys in an object
     - Current substitute for `for of` with objects
-    
+
+# Module #7 An Array of Array Improvements    
+29. `Array.from()`
+    - Not on the prototype, on the Array itself
+    - Converts something that is array-ish to a true array
+    - 2nd argument takes function
+    - Can covert `arguments` (not a true array) into an array also
+```html
+<div class="people">
+    <p>Wes</p>
+    <p>Kait</p>
+    <p>Snickers</p>
+</div>
+```
+
+```js
+// Method 1
+// We make an array from the DOM elements
+const people = document.querySelectorAll('.people p');
+const peopleArray = Array.from(people);
+const names = peopleArray.map(person => person.textContent);
+console.log(names);
+
+// Method 1 refactor
+const people = Array.from(document.querySelectorAll('.people p');)
+const names = people.map(person => person.textContent);
+console.log(names);
+
+// Method 2
+// Array.from has a built in map function
+const people = document.querySelectorAll('.people p');
+const peopleArray = Array.from(people, person => {return person.textContent});
+console.log(peopleArray);
+```
+
+30. `Array.of()`
+    - Not on the prototype, on the Array itself
+    - Converts everything in your arguments to a true array
+```js
+const ages = Array.of(12,4,23,62,34);
+console.log(ages); // returns an array of these numbers
+```
+
+31. `Array.find()`
+    - Returns true or false if values exist
+    - Use `.filter()` for multiple values
+```js
+// Will now return that specific instagram post from that ID
+// To find multiple objects, use .filter()
+const post = posts.find(post => {
+    console.log(post.code);
+    if(post.code === 'VBgtGQcSf') {
+        return true;
+    }
+    return false;
+})
+
+// Refactors to:
+const code = 'VBgtGQcSf';
+const post = posts.find(post => post.code === code);
+console.log(post);
+```
+
+32. `Array.findIndex()`
+    - Returns where the values exists
+```js
+const postIndex = posts.findIndex((post) => {
+    if(post.code === code) {
+        return true;
+    }
+    return false;
+})
+
+// Refactors to:
+const postIndex =  posts.findIndex(post => post.code === code);
+```
+
+33. `.some()`
+    - Returns if at least one value is true
+```js
+const ages = [32, 15, 19, 12];
+const youngins = [1, 2, 2, 5];
+
+// Is there at least one adult in the group? (>18 years old)
+const adultPresent = ages.some(age => age >= 18);
+console.log(adultPresent); // true
+console.log(youngins); // false
+```
+
+34. `.every()`
+    - Returns if all values are true
+```js
+const ages = [32, 15, 19, 12];
+const youngins = [1, 2, 2, 5];
+
+// Is everyone old enough to drink? (>19 years old)
+const allOldEnough = ages.every(age => age >= 19);
+console.log(allOldEnough); // false
+```
