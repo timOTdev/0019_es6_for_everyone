@@ -1710,23 +1710,22 @@ console.log(allOldEnough); // false
 # Module #8 Say Hello to ...Spread and ...Rest
 ## Spread Operator Introduction
 - Takes every item from an iterable and returns each
-- In this example, we are trying to add veg to the middle of the 2 arryas
+- In this example, we are trying to add veg to the middle of the 2 arrays
 ```js
-// Standard syntax
 const featured = ['Deep Dish', 'Pepperoni', 'Hawaiian'];
 const specialty = ['Meatzza', 'Spicy Mama', 'Margherita'];
 
+// Standard syntax
 let pizzas = pizzas.concat(featured);
 pizzas.push('veg');
 pizzas = pizzas.concat(specialty);
-consoel.log(pizzas);
+console.log(pizzas);
 
 // ES6 syntax
-const pizzas = [...featured, ...specialty];
-    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'Meatzza', 'Spicy Mama', 'Margherita'];
-const pizzas = [...featured, 'veg', ...specialty];
-    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
-``
+const pizzas = [...featured, ...specialty]; // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'Meatzza', 'Spicy Mama', 'Margherita'];
+const pizzas = [...featured, 'veg', ...specialty]; // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+```
+
 - If you use spread on a string:
 - It goes over each character instead
 ```js
@@ -1736,37 +1735,59 @@ const pizzas = [...featured, 'veg', ...specialty];
 
 ### Copying an array
 ```js
-// Standard syntax
-const pizzas = [...featured, 'veg', ...specialty];
-    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
-const fridayPizzas = pizzas;
-    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+const featured = ['Deep Dish', 'Pepperoni', 'Hawaiian'];
+const specialty = ['Meatzza', 'Spicy Mama', 'Margherita'];
+
+// Non-working example
+// We simply reference the array, not make a copy
+// But pizzas array also changed which we do not want
+const pizzas = [...featured, 'veg', ...specialty]; // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+const fridayPizzas = pizzas; // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
 
 fridayPizzas[0] = "Canada Pie";
-fridayPizzas;
-    // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
-pizzas;
-    // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+fridayPizzas; // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+pizzas; // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
 
-// But pizzas array also changed which we do not want
-// We simply reference the array, not make a copy
-// We use to use concat:
+// Standard syntax
 const fridayPizas = [].concat.pizzas;
 
 // ES6 syntax
 const fridayPizzas = [...pizzas];
 fridayPizzas[0] = "Canada Pie";
 
-fridayPizzas;
-    // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
-pizzas;
-    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+fridayPizzas; // ['Canada Pie', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+pizzas; // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
 ```
 
 ## Spread Exercise
 - We are spreading a string, and each letter will animate
 - You can hover over each letter so you have to wrap in a span
 - Use map, spread, querySelectorAll
+```html
+<body>
+    <h2 class="jump">SPREADS!</h2>
+</body>
+```
+```js
+const heading = document.querySelectorAll('.jump');
+heading.innerHTML = sparanWrap(heading.textContent);
+
+function sparanWrap(word) {
+    return [...word].map(letter => `<span>${letter}</span>`).join('');
+}
+```
+
+- You also have to make an inline-block on the css
+- You can span on an inline element
+```css
+.jump span {
+    display: inline-block;
+    transition: transform 0.2s;
+}
+.jump span:hover {
+    transform: translateY(-20px) rotate(10deg) scale(2);
+}
+```
 
 ## More Spread Examples
 - Another example when we want to return from a DOM node:
@@ -1783,6 +1804,7 @@ const names = people.map((person) => person.textContent);
 
 // Does not work because people is a node list, not an array
 ```
+
 - So we need to use 1 of 2 ways:
 - Wes thinks Array.from() reads better
 ```js
@@ -1805,7 +1827,7 @@ const deepDish = {
 }
 
 // So we add the ingredients to our shopping list to buy
-const shoppingList = ['Milk', 'Flour', ...deepDish.ingredients];
+const shoppingList = ['Milk', 'Flour', ...deepDish.ingredients]; // ['Milk', 'Flour', 'Marinara', 'Italian Sausage', 'Dough', 'Cheese']
 ```
 
 ### Deleting an object off the array
@@ -1828,8 +1850,9 @@ const newComments = [comments.slice(0, commentIndex), comments.slice(commentInde
 // But we get an array of arrays, so we have to use the spread operator
 const newComments = [...comments.slice(0, commentIndex), ...comments.slice(commentIndex + 1)];
 ```
+
 ## Spreading into a function
-- We want to tack values from an array onto another array
+- We want to attach values from an array onto another array
 - Inventors example:
 ```js
 const inventors = ['Einstein', 'Newton', 'Galileo'];
@@ -1840,6 +1863,7 @@ inventors.push(newInventors) // ['Einstein', 'Newton', 'Galileo', Array[2]]
 
 // Standard syntax
 // It pushes each item into an array instead of the whole array
+// But this is confusing syntax
 inventors.push.apply(inventors, newInventors);
 console.log(inventors) = ['Einstein', 'Newton', 'Galileo', 'Musk', 'Jobs']
 
@@ -1877,6 +1901,7 @@ function convertCurrency(rate, ...amounts) {
 convertCurrency(1.54, 10, 23, 52, 1, 56); // 1.54 > [10, 23, 52, 1, 56]
 convertCurrency(1.54, 10); // 1.54 > [10]
 ```
+
 - Then we want to take the amounts and multiply by the rate:
 ```js 
 function convertCurrency(rate, ...amounts) {
@@ -1886,6 +1911,7 @@ function convertCurrency(rate, ...amounts) {
 const amounts = convertCurrency(1.54, 10, 23, 52, 1, 56);
 console.log(amounts); // [15.4, 35.42, 80.08, 1.5, 86.24]
 ```
+
 - We can also use as many pre-arguments also:
 ```js 
 function convertCurrency(rate, tax, tip ...amounts) {
@@ -1897,6 +1923,7 @@ console.log(amounts); // [15 10 23 > [52, 1, 56]]
 ```
   
 - Runner example:
+- We used destructing here also
 ```js
 cons runner = ['Wes Bos', 123, 5.5, 5, 3, 6, 35];
 const [name, id, runs] = runner;

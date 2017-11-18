@@ -329,3 +329,26 @@ const youngins = [1, 2, 2, 5];
 const allOldEnough = ages.every(age => age >= 19);
 console.log(allOldEnough); // false
 ```
+
+# Module #8 Say Hello to ...Spread and ...Rest
+35. Spread Parameter
+- Usage is `...` before the variable
+- Takes items in an iterable (ie array) and spreads it out
+- If it's a string, it spreads each letter
+- Spread is useful for copying arrays also
+```js
+// Standard syntax
+const featured = ['Deep Dish', 'Pepperoni', 'Hawaiian'];
+const specialty = ['Meatzza', 'Spicy Mama', 'Margherita'];
+
+// Spreading
+const pizzas = [...featured, 'veg', ...specialty];
+    // ['Deep Dish', 'Pepperoni', 'Hawaiian', 'veg', 'Meatzza', 'Spicy Mama', 'Margherita'];
+
+// Copying
+const fridayPizzas = [...pizzas];
+```
+
+36. Rest Parameter
+    - Usage is `...` before ther variable
+    - Takes items and packs it together in an array
