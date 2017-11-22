@@ -352,3 +352,122 @@ const fridayPizzas = [...pizzas];
 36. Rest Parameter
     - Usage is `...` before ther variable
     - Takes items and packs it together in an array
+
+# Module #9 Object Literal Upgrades
+37. Same name key-values of objects
+    - Can just use key name since values has the same name
+    - Can rename the key if you desire
+```js
+const first = 'snickers';
+const last = 'bos';
+const age = 2;
+const breed = 'King Charles Cav';
+
+// Standard syntax
+const dog = {
+    first: first,
+    last: last,
+    age: age,
+    breed: breed,
+};
+console.log(dog); // Object{first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
+
+// ES6 syntax
+// If you have the same value names as key names, you can just:
+const dog = {
+    first,
+    last,
+    age,
+    breed,
+};
+console.log(dog); // Object{first: "snickers", last: "bos", age: 2, breed: "King Charles Cav"}
+```
+
+- You can also change or add the name of the keys if you want:
+```js
+const dog = {
+    firstName: first,
+    last,
+    age,
+    breed,
+    pals: ['Hugo', 'Sunny']
+};
+console.log(dog); // Object{firstName: "snickers", last: "bos", age: 2, breed: "King Charles Cav", pals: Array[2]}
+``` 
+
+38. Working with methods of a function
+    - Can short-hand the method for clarity
+```js
+// Standard syntax
+const modal = {
+    create: function() {
+
+    },
+    open: function() {
+
+    }
+}
+
+// ES6 syntax
+// You should not use arrow method with methods of a object
+// You can add arguments as normal
+const modal = {
+    create() {
+
+    },
+    open(content) {
+
+    }
+```
+
+39. Computed Property Names
+- Basically allows you to tack on a name for key names
+```js
+// Standard syntax
+const key = 'pocketColor';
+const value = '#ffc600';
+
+const tShirt = {
+    [key]: value
+}
+
+console.log(tShirt); // Object{pocketColor: "#ffc600"}
+
+// ES6 syntax
+const key = 'pocketColor';
+const value = '#ffc600';
+
+function invertColor(color) {};
+const tShirt = {
+    [key]: value,
+    [`${key}Opposite`]: invertColor(value);
+};
+
+console.log(tShirt); // Object{pocketColor: "#ffc600", pocketColorOpposite: "#0039ff"}
+
+// In the past, you had to make a tShirt object and update that object
+const tShirt = {};
+
+tShirt[key]: value,
+tShirt[`${key}Opposite`]: invertColor(value)
+```
+
+40. `.shift()`
+- Helps attach values of two arrays at same indices
+```js
+const keys = ['size', 'color', 'weight'];
+const values = ['medium', 'red', 100];
+
+// Standard syntax
+const shirt = {
+   // [keys[0]] take out brackets
+}
+
+// ES6 syntax
+const shirt = {
+    [keys.shift()]: values.shift(),
+    [keys.shift()]: values.shift(),
+    [keys.shift()]: values.shift(),
+}
+// Object {size: "medium", color: "red", weight: "100"}
+```

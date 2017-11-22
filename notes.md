@@ -2017,6 +2017,9 @@ const modal = {
 
 ### Computed property names
 - When we need to set a key on an object
+- Such as if we want to add `Opposite` on `pocketColor`
+- Note that `key[0]` is also a computed property name
+- So I think it's anytime that it's not the original key
 - T-Shirt example:
 ```js
 // Standard syntax
@@ -2033,13 +2036,14 @@ console.log(tShirt); // Object{pocketColor: "#ffc600"}
 const key = 'pocketColor';
 const value = '#ffc600';
 
+// Wes' function to get opposite color
 function invertColor(color) {};
 const tShirt = {
     [key]: value,
     [`${key}Opposite`]: invertColor(value);
 };
 
-console.log(tShirt); // Object{pocketColor: "#ffc600"}
+console.log(tShirt); // Object{pocketColor: "#ffc600", pocketColorOpposite: "#0039ff"}
 
 // In the past, you had to make a tShirt object and update that object
 const tShirt = {};
