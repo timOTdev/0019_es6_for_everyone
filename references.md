@@ -652,3 +652,80 @@ console.log(syms); // Returns an array of the key of the symbol
 const data = syms.map(map => classRoom[sym]);
 console.log(data); // Returns an array of objects
 ```
+
+# Module #12 Code Quality with ESLint
+44. ESLint
+    - Code quality linting tool like JSHint, JSLint
+    - Make sure you have NodeJS (v4.0.0+) and NPM (v3.0.0+)
+    - Install with `npm install -b eslint`
+    - Check version with `eslint --version`
+    - Run with `eslint <filename>`
+    - You can install settings globally or project by project
+    - Most prefer project by project
+    - Use `.eslintrc` to set rules and write rules in json
+    - You have to turn on the rules in this file with `"env"`
+    - You can get other people's rules with `"extends"`
+    - Turn off rules with `"rules"` (off, warn, error || 0, 1, 2)
+```js
+{
+    "env": {
+        "es6": true,
+        "browser": true,
+        "jquery": true,
+    },
+    "extends": "eslint:recommended"
+    "rules": {
+        "no-console": "warn"
+    }
+}
+```
+
+## Airbnb Style Guide
+- [ESLint AirBnB Style Guide](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb) gives you specific rules
+- Install with commands from website and add `"extends": "airbnb"`
+- Auto-fix option with `eslint <filename> --fix
+- Good to have a global `.eslintrc` file if there are none in your projects
+- Global `.eslintrc` is in your home or root directory
+- Start adding your own rules
+
+## File specific linting
+- Some sites require tags like google analytics and twitter
+- We can set globals specific in each file or even lines
+```js
+/* globals twttr ga */
+
+ga.track();
+twttr.trackConversion();
+```
+
+## Line specific linting
+```js
+// Ignore specific rules per file
+    /* eslint-disable no-extend native */
+
+// Ignore all rules per file
+    /* eslint-disable */
+
+// Ignore specific rules between lines
+    /* eslint-disable no-extend native */
+        content goes here
+    /* eslint-enable no-extend-native */
+
+// Ignore all rules between lines
+    /* eslint-disable */
+        content goes here
+    /* eslint-enable */
+```
+
+## ESLint plugins
+- Visit [Awesome-ESlint](https://github.com/dustinspecker/awesome-eslint#plugins)
+- Has lint rules for JS in markdown or JS in script tags in HTML files
+- Install with `npm install eslint-plugin-html` and `npm install eslint eslint-plugin-markdown`
+- Add `"plugins": ["html", "markdown"]`
+
+## ESLint with repos and hooks
+- Stops people from submitting bad code to the repo unless it passes first
+- Install with `git init es6git` and cd inside
+- Make a file with bad code
+- Inside the .git directory, there is a folder for hooks
+- Hooks are basically code that runs before operations start
