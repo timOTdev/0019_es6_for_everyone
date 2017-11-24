@@ -471,3 +471,184 @@ const shirt = {
 }
 // Object {size: "medium", color: "red", weight: "100"}
 ```
+
+# Module #10 Promises
+41. Promises
+- Promises are queued task of fetching data from a server
+- Generally seen with fetch API
+- Must ask for .json() format if you want that
+- When data returns, use `.then()` to process it
+- Use `.catch` to return errors
+```js
+const p = new Promise((resolve, reject)) => {
+    setTimeout(() => {
+        resolve('Wes is cool!');
+    }, 1000);
+    reject(Error('Err wes isn\'t cool'));
+});
+
+p
+    .then(data => {
+        console.log(data);
+    })
+    .catch(err => {
+        console.error(err);
+    })
+```
+
+- Promises are at the root of asynchronous request
+- Helps create multiple streams of data requests/return streams
+- Database simulation example:
+```js
+const posts = [
+    { title: 'I love JavaScript', author: 'Wes Bos', id: 1 },
+    { title: 'CSS!', author: 'Chris Coyier', id: 2 },
+    { title: 'Dev tools tricks', author: 'Addy Osmani', id: 3 },
+];
+
+const authors = [
+    { name: 'Wes Bos', twitter: '@wesbos', bio: 'Canadian Developer' },
+    { name: 'Chris Coyier', twitter: '@chriscoyier', bio: 'CSS Tricks and CodePen' },
+    { name: 'Addy Osmani', twitter: '@addyosmani', bio: 'Googler' },
+];
+
+function getPostById(id) {
+    return new Promise((resolve, reject) => {
+        const post = posts.find(post => post.id === id);
+        if(post) {
+            resolve(post);
+        } else {
+            reject(Error('No Post Was Found'));
+        }
+    })
+}
+
+getPostById(2)
+    .then(post => {
+        console.log(post)
+    });
+```
+
+- Wes calls this hydrating when we want to return an object
+- He wants to show the additional social media info for Chris Coyier
+```js
+const posts = [
+    { title: 'I love JavaScript', author: 'Wes Bos', id: 1 },
+    { title: 'CSS!', author: 'Chris Coyier', id: 2 },
+    { title: 'Dev tools tricks', author: 'Addy Osmani', id: 3 },
+];
+
+const authors = [
+    { name: 'Wes Bos', twitter: '@wesbos', bio: 'Canadian Developer' },
+    { name: 'Chris Coyier', twitter: '@chriscoyier', bio: 'CSS Tricks and CodePen' },
+    { name: 'Addy Osmani', twitter: '@addyosmani', bio: 'Googler' },
+];
+
+function getPostById(id) {
+    return new Promise((resolve, reject) => {
+        const post = posts.find(post => post.id === id);
+        if(post) {
+            resolve(post);
+        } else {
+            reject(Error('No Post Was Found'));
+        }
+    })
+}
+
+function hydrateAuthor(post) {
+    return new Promise((resolve, reject) => {
+        const authorDetails = authors.find(person => person.name === post.author)
+        if(authorDetails) {
+            post.author = authorDetails;
+            resolve(post);
+        } else {
+            reject(Error('Cannot find the author'));
+        }
+    });
+}
+
+getPostById(2)
+    .then(post => {
+        console.log(post);
+        return hydrateAuthor(post);
+    })
+    .then(post => {
+        console.log(post);
+    })
+    .catch(err => {
+        console.error(err);
+    })
+
+getPostById(2) // { name: 'Chris Coyier', twitter: '@chriscoyier', bio: 'CSS Tricks and CodePen' }
+getPostById(5) // No Post Was Found!
+getPostById(3) // Cannot find the author if the author's name is mispelled
+```
+
+- We can also send off multiple requests at once
+- The slowest promise that returns is the rate-limiting one
+- `Promise.all()` waits for all the promises to return
+```js
+const postsPromise = fetch('http://wesbos.com/wp-json/wp/v2/posts');
+const streetCarsPromise = fetch('http://data.ratp.fr/api/datasets/1.0/search/?q=paris');
+
+Promise
+    .all([postsPromise, streetCarsPromise])
+    .then(responses => {
+        return Promise.all(responses.map(res => res.json()))
+    })
+    .then(responses => {
+        console.log(responses);
+    });
+```
+
+# Module #11 Symbols
+43. `Symbol()`
+    - 7th primitive type
+```js
+// Think of Wes here as a descriptor
+const wes = Symbol('Wes'); // Think of it as a unique symbol A3awD21Qhd8kdqpx
+const person = Symbol('Wes')
+
+wes; // Symbol(Wes)
+person; // Symbol(Wes)
+wes === person; // false
+wes == person; // false
+```
+
+- Symbols are unique identifiers that help avoid naming collisions
+```js
+const classRoom = {
+    'Mark': { grade: 50, gender: 'male' },
+    'Olivia': { grade: 80, gender: 'female' },
+    'Olivia': { grade: 70, gender: 'female' },
+}
+```
+
+- We can use symbols here:
+- Symbols are innumerable with a loop
+- Good for storing something private since you can't loop over them
+```js
+const classRoom = {
+    [Symbol('Mark')]: { grade: 50, gender: 'male' },
+    [Symbol('Olivia')]: { grade: 80, gender: 'female' },
+    [Symbol('Olivia')]: { grade: 70, gender: 'female' },
+}
+
+// Symbols are innumerable and can't loop over them
+// Good way to store private data
+// This for loop will not work
+for (person in classRoom) {
+    console.log(person)
+}
+```
+
+- If you want to grab the items, use `Object.getOwnPropertySymbols()`
+- We use that to convert the object into an array so we can loop
+```js
+const syms = Object.getOwnPropertySymbols(classRoom);
+console.log(syms); // Returns an array of the key of the symbol
+
+// To get the data
+const data = syms.map(map => classRoom[sym]);
+console.log(data); // Returns an array of objects
+```
