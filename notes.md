@@ -2576,45 +2576,48 @@ import Flickity from 'flickity';
 
 ### Setting up our modules with NPM
 - You can use JSpm or Bowser, but NPM is most popular
-- Package JSON will save all the modules for our app
+- `package.json` will save all the modules for our app
 - Try to install other libraries you would use
 - Note: JSONP does not work with fetch api but we an install jsonp package
 ```js
 touch app.js // Creating an entry point
 npm init // Make a JSON file for the package, makes a package.json
 npm install slug --save // Installs the slug module
-npm install lodash flickity --save // Install lodash and slug
+npm install lodash flickity --save // Install lodash
 install jquery --save
 install insane --save
 install jsonp --save
 ```
+
 - Then we need to add import statements also in our HTML file
 ```js
 import { uniq } from 'lodash';
 import insane from 'insane';
 ```
+
 - However, you will error when opening the file in the browser
 - Reason is that it doesn't know how to handle the import statement
 - So now we need another tool: Webpack
 - If you ever delete your node module folder since it's large file size
-- You can reinstall it
+- You can reinstall it with `npm install`
 - You don't need the node_modules folder unless you need offline access
 - Don't worry too much about what's in those folders
-```
+```js
 trash node_modules
 npm install
 ```
 
 ### Setting up webpack and babel
-```
+```js
 npm install webpack --save-dev
 npm install babel-loader babel-core babel-preset-es2015-native-modules --save-dev
 ```
+
 - We also have to enable it
-- Wes opened a file called webpack.config.js and provided this code
+- Wes opened a file called `webpack.config.js` and provided this code
 - He explained all these settings in the video
 ```js
-
+// webpack.config.js
 const webpack = require('webpack');
 const nodeEnv = process.env.NODE_ENV || 'production';
 
@@ -2654,11 +2657,12 @@ module.exports = {
   ]
 };
 ```
+
 ## Creating your own Modules
 - Wes made an src folder keep all the modules in
-- He's going to create 1 function and 2 strings
-- He made a config.js for api keys and keys
-- You don't need to put the extension on the end in the import statement
+- He's going to create 1 function and 2 strings to export
+- He made a `config.js` for api keys and keys
+- You don't need to put the extension on the end in the import statement for the `config.js`
 ```js
 // app.js
 import apiKey from './src/config';
@@ -2666,7 +2670,8 @@ import apiKey from './src/config';
 // config.js
 const apiKey = 'abc123';
 ```
-- Variables are scoped to the module and not global
+
+- Variables are scoped to the module and not accessible to other files/modules
 - Check out the [MDN Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export) about exporting
 
 - 2 type of exports:
@@ -2675,17 +2680,17 @@ const apiKey = 'abc123';
 - You can only have **one default export** per module
 - But you can have as many named exports as you want
 ```js
+// config.js
+const apiKey = 'abc123';
+
+export default apiKey;
+
 // app.js
 import apiKey from './src/config'; // Can import as the same name
 import wesIsCool from './src/config'; // Or can make a custom name, it will automatically understand since there is only 1 default export per module
 
 console.log(apiKey);
 console.log(wesIsCool);
-
-// config.js
-const apiKey = 'abc123';
-
-export default apiKey;
 ```
 
 ### 2. Named export
@@ -2693,23 +2698,25 @@ export default apiKey;
 - Must use brackets for named exports
 - Looks like destructuring but not exactly
 ```js
-// app.js 
-import { apiKey, url, sayHi, age, dog } from '.src/config';
-sayHi('wes');
-
 // config.js
 export const apiKey = 'abc123';
 export const url = 'http://wesbos.com';
+
+// app.js 
+import { apiKey, url, sayHi, age, dog } from '.src/config';
+sayHi('wes');
 
 // You can export functions also
 export function sayHi(name) {
     console.log(`Hello there ${name}`);
 } 
+
 // Can export multiple variables at once
 const age = 100;
 const dog = 'snickers';
 export { age, dog }
 ```
+
 - You can also rename the variables if you desire using "as"
 - It can be done via import or export side
 ```js

@@ -729,3 +729,75 @@ twttr.trackConversion();
 - Make a file with bad code
 - Inside the .git directory, there is a folder for hooks
 - Hooks are basically code that runs before operations start
+
+# Module #13 JavaScript Modules and Using npm
+- JS Modules are basically files has pre-written JS code to add features
+- Webpack helps bundles multiple files into one
+- NPM is the most popular package manager now above some other ones
+- `package.json` file keeps our dependencies
+- `app.js` is our entry point
+- Use `npm init` to initiate our package
+- Some dependencies has other dependencies it requires too
+- Use `npm install` and install the dependencies in your `package.json`
+- You can use a named export ie `import { uniq } from `lodash`
+- You have to install webpack to use imports, part of ES6
+- Babel converts ES6 to ES5 equivalent code
+- Create a `webpack.config.js` to hold all the configurations
+- Loaders tells webpack how to handle file types
+- NPM scripts lets your create commands
+```js
+// webpack.config.js
+const webpack = require('webpack');
+const nodeEnv = process.env.NODE_ENV || 'production';
+
+module.exports = {
+  devtool: 'source-map',
+  entry: {
+    filename: './app.js'
+  },
+  output: {
+    filename: '_build/bundle.js'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['es2015-native-modules']
+        }
+      }
+    ]
+  },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      output: {
+        comments: false
+      },
+      sourceMap: true
+    }),
+    new webpack.DefinePlugin({
+      'process.env': { NODE_ENV: JSON.stringify(nodeEnv) }
+    })
+  ]
+};
+```
+
+## Creating your own modules
+- We need both `import` and `export`
+- Two types of export: `default` or `named`
+- You can export variables and functions
+- You can combine default and named exports when importing ie `import User, { createURL, gravatar } from './src/user`
+- For default exports, use `export default apiKey;` at the bottom of the file
+    - Variables are always scoped to each module
+    - You can rename the import as you like
+    - You can only ever have 1 default export in a module
+- With named exports, you must use the exact name of the export
+    - You need to use curly brackets with named exports when importing
+    - You can also export multiple variables at one ie `export { age, dog }`
+    - You can also rename the import ie `import { apiKey as key }`
+    - You can also rename the export ie `export { age as old }`
