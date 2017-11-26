@@ -801,3 +801,56 @@ module.exports = {
     - You can also export multiple variables at one ie `export { age, dog }`
     - You can also rename the import ie `import { apiKey as key }`
     - You can also rename the export ie `export { age as old }`
+
+# Module #14 ES6 Tooling
+- SystemJS, Browserify, and Rollup are also bundlers
+- Doesn't matter which you choose but Webpack seems to be the most popular
+- SystemJS is quick to set up and doesn't have all of the tooling associated with Webpack
+- You don't have to npm install modules and can import easiily
+- It's not meant for production, more for just testing
+- Load with `<script src="https://jspm.io/sysem@0.19.js">`
+- You also have to run a PHP or Python server
+- `Browser-sync` watches our files and updates our server automatically
+
+## Using just Babel
+- You only need bundlers if you're using modules but not for everything else
+- If you are using only Babel
+1. Run `npm init`
+2. Install `npm install babel-cli`
+3. Set up a script for Babel 
+```js
+"scripts": {
+    "babel": "babel app.js --watch --out-file app-compiled.js"
+  }
+```
+
+4. Install `babel-preset-env`
+- Tell what browser or node server you're trying to support and it will do the rest
+- Presets are a collection of plugins
+- Plugins will built in to transpile your code to ES5
+5. Add rules to transpile in `package.json`
+- You should do the rules under dependencies in `package.json`
+- This is more organized than keeping a `.babelrc` file
+```js
+"babel" : {
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      }
+    }]
+  ]
+}
+```
+6. Now we can run `npm run babel`
+7. You can also add experimental features for the future
+- You need to add the plugin by running the npm install from the website
+
+## Polyfilling
+- Babel will handle transpiling syntax but there are some method it doesn't transpile
+- Things like `Array.from()` are not available on all browsers
+- MDN will always have a polyfill section available on their site
+- Babel polyfill for lots of transpiling or polyfill.io just for small transpiling
+- Polyfill.io detects the user's browser and polyfills only waht is needed
+- It just uses a script tag to add to the project
+- You can also tailor your own polyfills for specific methods you need

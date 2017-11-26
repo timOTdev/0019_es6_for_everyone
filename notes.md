@@ -2775,13 +2775,13 @@ export const url = 'http://wesbos.com';
 
 # Module #14 ES6 Tooling
 ## Tool-Free Modules with SystemJS (+bonus BrowserSync setup)
-- SystemJS, Browserify, Rollup also bundle ES6 module
+- SystemJS, Browserify, Rollup also bundle ES6 modules
 - Doesn't matter which you use and Wes recommends Webpack
 - JSPM sits on top of NPM, not an alternative
 
 ### SystemJS
-- SystemJS runs in the browser with a script in html
-- Don't need any of the overheader for bundlers, compilers, and compilers
+- SystemJS runs in the browser with a script in HTML
+- Don't need any of the overheader for bundlers, compilers, and modules
 - It's great for testing but you would not want to use in production
 - Need to run the HTML through a server
 ```js
@@ -2791,15 +2791,17 @@ export const url = 'http://wesbos.com';
 ### Install browser-sync
 - Helps update HTML preview live
 - Install with: 
-```
+```js
 sudo npm install browser-sync --save-dev
 ```
+
 - Add script to package.json: 
-```
+```js
 "server": "browser-sync start --directory --server --files '*.js, *.html, *.css'"
 ```
+
 - Add script to index.html:
-```
+```js
 <script>
     System.config({ transpiler: 'babel'});
     System.import('./main.js');
@@ -2809,7 +2811,7 @@ sudo npm install browser-sync --save-dev
 ### Installing lodash with SystemJS
 - SystemJS can install from NPM without having to run commands
 - Add import statement in main.js:
-```
+```js
 import { sum, kebabCase } from 'npm:lodash';
 ```
 
@@ -2832,16 +2834,11 @@ export function addTax(amount, taxRate) {
 - Converts ES6 to ES5 and also experimental features
 - You can try to [Babel REPL](https://babeljs.io/repl/) to try it out
 - You only need to use Webpack, Browserify with Babel if you're using modules
-- Otherwise you won't need it.
-1. Make a babel directory
-2. Do a git init
-3. Install babel with npm
-- Use next if you want to do the experimental version
-```
-npm install babel-cli@next
-```
-4. Add script to package.json
-```
+- Otherwise you won't need it
+1. Run `npm init`
+2. Install `npm install babel-cli`
+3. Set up a script for Babel 
+```js
 "scripts": {
     "babel": "babel app.js --watch --out-file app-compiled.js"
   }
@@ -2854,13 +2851,15 @@ npm install babel-cli@next
 - You can use [babel-preset-env](https://github.com/babel/babel/tree/master/experimental/babel-preset-env)
 - After selecting the browser, it will tell you what you need to compile down to ES5
 1. Install with
-```
+```js
 npm install babel-preset-env@next
 ```
+
 2. Put settings in package.json instead of a .babelrc file
 - This is the same as putting in babelrc
+- It's just easier to manage
 - SIDENOTE: there's a babel-preset-react package as well
-```
+```js
 "babel" : {
   "presets": [
     ["env", {
@@ -2871,8 +2870,9 @@ npm install babel-preset-env@next
   ]
 }
 ```
+
 3. Run babel with:
-```
+```js
 npm run babel
 ```
 
@@ -2883,25 +2883,26 @@ let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
 ```
 - So we need to install a plugin
 1. Install via npm:
-```
+```js
 npm install --save-dev babel-plugin-transform-object-rest-spread
 ```
+
 2. Add to babelrc or package.json
 - Note that it's not a preset, so put it outside of that array
-```
+```js
 "plugins": ["transform-object-rest-spread"]
 ```
 
 ## Polyfilling ES6 for Older Browsers
 - Babel works only syntax but we still need polyfilling
-- Methods like Array.from() for ES6, Babel assumes all browsers have this method (not true)
+- Methods like `Array.from()` for ES6, Babel assumes all browsers have this method (not true)
 - We have to polyfill to create this method with vanilla javascript
 - There are polyfill sections on MDN
-- Two major polyfills:
+- Two major polyfills methods:
 1. Babel Polyfill
 - Only if you need modules or polyfilling a lot
 - Uses corejs
-```
+```js
 import "babel-polyfill";
 ```
 
@@ -2911,7 +2912,7 @@ import "babel-polyfill";
 - It dynamically generates a JS file for the user
 - You can also tailor your response with options
 - Install with:
-```
+```js
 <script src="https://cdn.polyfill.io/v2/polyfill.min.js></script>
 ```
 
